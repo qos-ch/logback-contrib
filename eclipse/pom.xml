@@ -15,39 +15,40 @@
   -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
+    <modelVersion>4.0.0</modelVersion>
+
     <parent>
-        <groupId>ch.qos.logback.extensions</groupId>
-        <artifactId>logback-ext-parent</artifactId>
-        <version>0.1.0-SNAPSHOT</version>
+      <groupId>ch.qos.logback.contrib</groupId>
+      <artifactId>logback-contrib-parent</artifactId>
+      <version>0.1.0-SNAPSHOT</version>
     </parent>
 
-    <modelVersion>4.0.0</modelVersion>
-    <artifactId>logback-ext-eclipse</artifactId>
-    <name>Logback Extensions :: Eclipse</name>
+    <artifactId>logback-eclipse</artifactId>
+    <name>Logback Contrib :: Eclipse</name>
     <packaging>jar</packaging>
 
     <dependencies>
       <dependency>
-          <groupId>ch.qos.logback</groupId>
-          <artifactId>logback-classic</artifactId>
+        <groupId>ch.qos.logback</groupId>
+        <artifactId>logback-classic</artifactId>
       </dependency>
 
 
-        <dependency>
-            <groupId>org.eclipse.equinox</groupId>
-            <artifactId>org.eclipse.equinox.common</artifactId>
-            <version>3.6.0.v20100503</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jibx.config.3rdparty.org.eclipse</groupId>
-            <artifactId>org.eclipse.core.runtime</artifactId>
-            <version>3.7.0.v20110110</version>
-        </dependency>
-        <dependency>
-            <groupId>org.osgi</groupId>
-            <artifactId>org.osgi.core</artifactId>
-            <version>4.3.0</version>
-        </dependency>
+      <dependency>
+        <groupId>org.eclipse.equinox</groupId>
+        <artifactId>org.eclipse.equinox.common</artifactId>
+        <version>3.6.0.v20100503</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jibx.config.3rdparty.org.eclipse</groupId>
+        <artifactId>org.eclipse.core.runtime</artifactId>
+        <version>3.7.0.v20110110</version>
+      </dependency>
+      <dependency>
+        <groupId>org.osgi</groupId>
+        <artifactId>org.osgi.core</artifactId>
+        <version>4.3.0</version>
+      </dependency>
     </dependencies>
 
 <!-- 

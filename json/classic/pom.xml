@@ -14,16 +14,16 @@
   ~ limitations under the License.
   -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
+  
     <parent>
-        <groupId>ch.qos.logback.extensions</groupId>
-        <artifactId>logback-ext-json-parent</artifactId>
+        <groupId>ch.qos.logback.contrib</groupId>
+        <artifactId>logback-json-parent</artifactId>
         <version>0.1.0-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>logback-ext-json-classic</artifactId>
-    <name>Logback Extensions :: JSON :: Classic</name>
+    <artifactId>logback-json-classic</artifactId>
+    <name>Logback Contrib :: JSON :: Classic</name>
     <packaging>jar</packaging>
 
     <dependencies>
@@ -33,8 +33,9 @@
            <version>${logback.version}</version>
        </dependency>
         <dependency>
-            <groupId>ch.qos.logback.extensions</groupId>
-            <artifactId>logback-ext-json-core</artifactId>
+            <groupId>ch.qos.logback.contrib</groupId>
+            <artifactId>logback-json-core</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 

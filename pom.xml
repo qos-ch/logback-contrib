@@ -17,40 +17,42 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ch.qos.logback.extensions</groupId>
-    <artifactId>logback-ext-parent</artifactId>
+    <groupId>ch.qos.logback.contrib</groupId>
+    <artifactId>logback-contrib-parent</artifactId>
     <packaging>pom</packaging>
     <version>0.1.0-SNAPSHOT</version>
 
-    <name>Logback Extensions</name>
-    <url>https://github.com/qos-ch/logback-extensions/wiki</url>
+    <name>Logback Contribs</name>
+    <url>https://github.com/qos-ch/logback-contribs/wiki</url>
     <description>
-        Logback Extensions provides community-driven and supported extensions to the Logback logging framework.
+        Logback Conntribs provides community-driven and supported
+        extensions to the Logback logging framework. All contributions
+        are made by contributors with CLA on file.
     </description>
     <inceptionYear>2012</inceptionYear>
 
     <licenses>
-        <license>
-            <name>Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
-            <distribution>repo</distribution>
-        </license>
+      <license>
+        <name>Apache License, Version 2.0</name>
+        <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+        <distribution>repo</distribution>
+      </license>
     </licenses>
 
     <scm>
-        <connection>scm:git:git://github.com/qos-ch/logback-extensions.git</connection>
-        <developerConnection>scm:git:git@github.com:qos-ch/logback-extensions.git</developerConnection>
-        <url>https://github.com/qos-ch/logback-extensions</url>
+      <connection>scm:git:git://github.com/qos-ch/logback-contrib.git</connection>
+      <developerConnection>scm:git:git@github.com:qos-ch/logback-contrib.git</developerConnection>
+      <url>https://github.com/qos-ch/logback-contrib</url>
     </scm>
     <issueManagement>
-        <system>GitHub</system>
-        <url>https://github.com/qos-ch/logback-extensions/issues</url>
+      <system>GitHub</system>
+      <url>https://github.com/qos-ch/logback-contrib/issues</url>
     </issueManagement>
 
     <distributionManagement>
         <repository>
-            <id>logback-extensions.repository.releases</id>
-            <name>Logback Extensions Release Distribution Repository</name>
+            <id>logback-contrib.repository.releases</id>
+            <name>Logback Contrib Release Distribution Repository</name>
             <url>${logback-extensions.repository.releases.url}</url>
         </repository>
         <snapshotRepository>
@@ -87,8 +89,6 @@
     <modules>
         <module>json</module>
         <module>jackson</module>
-        <module>loggly</module>
-        <module>spring</module>
         <module>mongodb</module>
         <module>eclipse</module>
     </modules>
@@ -97,9 +97,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Compile Dependencies: -->
-        <logback.version>1.0.6</logback.version>
+        <logback.version>1.0.9</logback.version>
         <jackson.version>1.9.5</jackson.version>
-        <spring.version>3.1.1.RELEASE</spring.version>
         <mongo-java-driver.version>2.7.3</mongo-java-driver.version>
 
         <!-- Test Dependencies: -->
@@ -204,32 +203,6 @@
                 <scope>provided</scope>
             </dependency>
 
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-context</artifactId>
-                <version>${spring.version}</version>
-                <scope>provided</scope>
-                <optional>true</optional>
-                <exclusions>
-                    <exclusion>
-                        <groupId>commons-logging</groupId>
-                        <artifactId>commons-logging</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-web</artifactId>
-                <version>${spring.version}</version>
-                <scope>provided</scope>
-                <optional>true</optional>
-                <exclusions>
-                    <exclusion>
-                        <groupId>commons-logging</groupId>
-                        <artifactId>commons-logging</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
 
             <dependency>
                 <groupId>org.mongodb</groupId>
