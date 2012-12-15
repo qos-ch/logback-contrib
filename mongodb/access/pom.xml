@@ -23,7 +23,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>logback-mongodb-access</artifactId>
-    <name>Logback Extensions :: MongoDB :: Access</name>
+    <name>Logback Contrib :: MongoDB :: Access</name>
     <packaging>jar</packaging>
 
     <dependencies>

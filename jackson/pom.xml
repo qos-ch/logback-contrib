@@ -23,7 +23,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>logback-jackson</artifactId>
-    <name>Logback Extensions :: Jackson</name>
+    <name>Logback Contrib :: Jackson</name>
     <packaging>jar</packaging>
 
     <dependencies>

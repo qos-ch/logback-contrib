@@ -23,7 +23,7 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>logback-mongodb-classic</artifactId>
-    <name>Logback Extensions :: MongoDB :: Classic</name>
+    <name>Logback Contrib :: MongoDB :: Classic</name>
     <packaging>jar</packaging>
 
     <dependencies>

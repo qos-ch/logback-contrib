@@ -24,7 +24,7 @@
     </parent>
 
     <artifactId>logback-mongodb-core</artifactId>
-    <name>Logback Extensions :: MongoDB :: Core</name>
+    <name>Logback Contrib :: MongoDB :: Core</name>
     <packaging>jar</packaging>
 
     <dependencies>
