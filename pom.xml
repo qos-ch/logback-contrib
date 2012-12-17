@@ -31,11 +31,14 @@
     </description>
     <inceptionYear>2012</inceptionYear>
 
-    <licenses>
+   <licenses>
       <license>
-        <name>Apache License, Version 2.0</name>
-        <url>http://www.apache.org/licenses/LICENSE-2.0</url>
-        <distribution>repo</distribution>
+       <name>Eclipse Public License - v 1.0</name>
+       <url>http://www.eclipse.org/legal/epl-v10.html</url>
+      </license>
+      <license>
+       <name>GNU Lesser General Public License</name>
+       <url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html</url>
       </license>
     </licenses>
 
@@ -49,18 +52,18 @@
       <url>https://github.com/qos-ch/logback-contrib/issues</url>
     </issueManagement>
 
-    <distributionManagement>
-        <repository>
-            <id>logback-contrib.repository.releases</id>
-            <name>Logback Contrib Release Distribution Repository</name>
-            <url>${logback-extensions.repository.releases.url}</url>
-        </repository>
-        <snapshotRepository>
-            <id>logback-extensions.repository.snapshots</id>
-            <name>Logback Extensions Snapshot Distribution Repository</name>
-            <url>${logback-extensions.repository.snapshots.url}</url>
-        </snapshotRepository>
-    </distributionManagement>
+  <distributionManagement>
+    <!--<site>-->
+      <!--<id>pixie</id>-->
+      <!--<url>scp://pixie.qos.ch/var/www/logback.qos.ch/htdocs/</url>-->
+    <!--</site>-->
+
+    <repository>
+      <id>sonatype-nexus-staging</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+   </repository>
+
+  </distributionManagement>
 
     <developers>
         <developer>
@@ -112,12 +115,6 @@
     <dependencies>
         <!-- Test Dependencies for _all_ children modules: -->
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
-            <version>${groovy.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymock</artifactId>
             <version>${easymock.version}</version>
@@ -167,27 +164,6 @@
                <version>${logback.version}</version>
            </dependency>
 
-
-            <dependency>
-                <groupId>ch.qos.logback.extensions</groupId>
-                <artifactId>logback-ext-jackson</artifactId>
-                <!--suppress MavenModelInspection -->
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>ch.qos.logback.extensions</groupId>
-                <artifactId>logback-ext-json-classic</artifactId>
-                <!--suppress MavenModelInspection -->
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>ch.qos.logback.extensions</groupId>
-                <artifactId>logback-ext-json-core</artifactId>
-                <!--suppress MavenModelInspection -->
-                <version>${project.version}</version>
-            </dependency>
-
             <!-- 3rd party dependencies: -->
             <dependency>
                 <groupId>javax.servlet</groupId>
@@ -223,38 +199,10 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>2.3.2</version>
                     <configuration>
-                        <source>1.6</source>
-                        <target>1.6</target>
+                        <source>1.5</source>
+                        <target>1.5</target>
                         <encoding>UTF-8</encoding>
                     </configuration>
-                </plugin>
-                <plugin>
-                    <!-- For unit tests: -->
-                    <groupId>org.codehaus.gmaven</groupId>
-                    <artifactId>gmaven-plugin</artifactId>
-                    <version>1.4</version>
-                    <configuration>
-                        <providerSelection>1.7</providerSelection>
-                        <source>src/main/groovy</source>
-                    </configuration>
-                    <dependencies>
-                        <dependency>
-                            <groupId>org.codehaus.gmaven.runtime</groupId>
-                            <artifactId>gmaven-runtime-1.7</artifactId>
-                            <version>1.3</version>
-                            <exclusions>
-                                <exclusion>
-                                    <groupId>org.codehaus.groovy</groupId>
-                                    <artifactId>groovy-all</artifactId>
-                                </exclusion>
-                            </exclusions>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.codehaus.groovy</groupId>
-                            <artifactId>groovy-all</artifactId>
-                            <version>${groovy.version}</version>
-                        </dependency>
-                    </dependencies>
                 </plugin>
             </plugins>
         </pluginManagement>
