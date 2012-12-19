@@ -91,7 +91,7 @@
         <!-- Compile Dependencies: -->
         <logback.version>1.0.9</logback.version>
         <jackson.version>1.9.5</jackson.version>
-        <mongo-java-driver.version>2.7.3</mongo-java-driver.version>
+        <mongo-java-driver.version>2.10.1</mongo-java-driver.version>
 
         <!-- Test Dependencies: -->
         <easymock.version>3.1</easymock.version>
