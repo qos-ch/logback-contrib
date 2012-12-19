@@ -2,7 +2,11 @@
 
 This project is licensed under the [Apache 2.0 Open Source License](http://www.apache.org/licenses/LICENSE-2.0).
 
-## Project Documentation is [here](https://github.com/qos-ch/logback-contrib/wiki).
+
+## Project Documentation 
+
+Is [here](https://github.com/qos-ch/logback-contrib/wiki).
+
 
 ## Build Instructions
 
