@@ -26,7 +26,7 @@
     <groupId>ch.qos.logback.contrib</groupId>
     <artifactId>logback-contrib-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.1-SNAPSHOT</version>
+    <version>0.1.1</version>
 
     <name>Logback Contribs</name>
     <url>https://github.com/qos-ch/logback-contribs/wiki</url>
@@ -226,14 +226,6 @@
             </plugin>
         </plugins>
     </build>
-
-  <distributionManagement>
-    <repository>
-      <id>sonatype-nexus-staging</id>
-      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-
-    </repository>
-  </distributionManagement>
 
     <profiles>
         <profile>
