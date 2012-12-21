@@ -26,7 +26,7 @@
     <groupId>ch.qos.logback.contrib</groupId>
     <artifactId>logback-contrib-parent</artifactId>
     <packaging>pom</packaging>
-    <version>0.1.2</version>
+    <version>0.1.2-SNAPSHOT</version>
 
     <name>Logback Contribs</name>
     <url>https://github.com/qos-ch/logback-contribs/wiki</url>
