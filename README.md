@@ -15,7 +15,7 @@ If you want to use logback-contrib in your project, here is the corresponding Ma
 ```xml
 <dependency>
     <groupId>ch.qos.logback.contrib</groupId>
-    <artifactId>logback-contrib-parent</artifactId>
+    <artifactId>logback-{CONTRIB SUB PROJECT}</artifactId>
     <version>0.1.1</version>
 </dependency>
 ```
