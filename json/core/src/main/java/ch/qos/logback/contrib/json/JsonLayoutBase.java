@@ -15,6 +15,7 @@
  */
 package ch.qos.logback.contrib.json;
 
+import ch.qos.logback.core.CoreConstants;
 import ch.qos.logback.core.LayoutBase;
 
 import java.text.DateFormat;
@@ -35,11 +36,13 @@ public abstract class JsonLayoutBase<E> extends LayoutBase<E> {
     protected boolean includeTimestamp;
     protected String timestampFormat;
     protected String timestampFormatTimezoneId;
+    protected boolean appendLineSeparator;
 
     protected JsonFormatter jsonFormatter;
 
     public JsonLayoutBase() {
         this.includeTimestamp = true;
+        this.appendLineSeparator = false;
     }
 
     @Override
@@ -48,11 +51,17 @@ public abstract class JsonLayoutBase<E> extends LayoutBase<E> {
         if (map == null || map.isEmpty()) {
             return null;
         }
+        String result = getStringFromFormatter(map);
+        return isAppendLineSeparator() ? result + CoreConstants.LINE_SEPARATOR : result;
+    }
+
+    private String getStringFromFormatter(Map map) {
         JsonFormatter formatter = getJsonFormatter();
         if (formatter == null) {
             addError("JsonFormatter has not been configured on JsonLayout instance " + getClass().getName() + ".  Defaulting to map.toString().");
             return map.toString();
         }
+
         try {
             return formatter.toJsonString(map);
         } catch (Exception e) {
@@ -121,5 +130,13 @@ public abstract class JsonLayoutBase<E> extends LayoutBase<E> {
 
     public void setTimestampFormatTimezoneId(String timestampFormatTimezoneId) {
         this.timestampFormatTimezoneId = timestampFormatTimezoneId;
+    }
+
+    public boolean isAppendLineSeparator() {
+        return appendLineSeparator;
+    }
+
+    public void setAppendLineSeparator(boolean appendLineSeparator) {
+        this.appendLineSeparator = appendLineSeparator;
     }
 }
