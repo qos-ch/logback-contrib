@@ -77,6 +77,12 @@
             <timezone>-5</timezone>
         </developer>
     </developers>
+    <contributors>
+    	<contributor>
+    		<name>David J. M. Karlsen</name>
+    		<email>david@davidkarlsen.com</email>
+    	</contributor>
+    </contributors>
 
     <modules>
         <module>json</module>
@@ -90,7 +96,7 @@
 
         <!-- Compile Dependencies: -->
         <logback.version>1.0.9</logback.version>
-        <jackson.version>1.9.5</jackson.version>
+        <jackson.version>2.1.3</jackson.version>
         <mongo-java-driver.version>2.10.1</mongo-java-driver.version>
 
         <!-- Test Dependencies: -->
@@ -162,8 +168,8 @@
                 <optional>true</optional>
             </dependency>
             <dependency>
-                <groupId>org.codehaus.jackson</groupId>
-                <artifactId>jackson-mapper-asl</artifactId>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
                 <version>${jackson.version}</version>
                 <scope>provided</scope>
             </dependency>

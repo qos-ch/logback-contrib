@@ -15,13 +15,14 @@
  */
 package ch.qos.logback.contrib.jackson;
 
-import ch.qos.logback.contrib.json.JsonFormatter;
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.map.ObjectMapper;
-
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Map;
+
+import ch.qos.logback.contrib.json.JsonFormatter;
+
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Jackson-specific implementation of the {@link JsonFormatter}.
@@ -44,7 +45,7 @@ public class JacksonJsonFormatter implements JsonFormatter {
     @Override
     public String toJsonString(Map m) throws IOException {
         StringWriter writer = new StringWriter(BUFFER_SIZE);
-        JsonGenerator generator = this.objectMapper.getJsonFactory().createJsonGenerator(writer);
+        JsonGenerator generator = this.objectMapper.getFactory().createJsonGenerator(writer);
 
         if (isPrettyPrint()) {
             generator.useDefaultPrettyPrinter();
