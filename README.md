@@ -11,9 +11,9 @@ Is [here](https://github.com/qos-ch/logback-contrib/wiki).
 ## Release notes 
 
 ### 0.1.2
-	* all jars are now also OSGi bundles,
-	* [add option to append a line separator after each JSON log message](https://github.com/qos-ch/logback-contrib/pull/2),
-	* [upgrade to jackson2](https://github.com/qos-ch/logback-contrib/pull/4).
+* all jars are now also OSGi bundles,
+* [add option to append a line separator after each JSON log message](https://github.com/qos-ch/logback-contrib/pull/2),
+* [upgrade to jackson2](https://github.com/qos-ch/logback-contrib/pull/4).
 
 
 ## Maven
