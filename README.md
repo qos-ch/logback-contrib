@@ -22,6 +22,7 @@ If you want to use logback-contrib in your project, here is the corresponding Ma
 
 You don't have to configure any Maven repository, logback-contrib is on Maven Central.
 
+
 ## Build Instructions
 
 This project requires Maven 2.2.1 or later to build (3.x works as well).  Run the following to build:
@@ -29,3 +30,17 @@ This project requires Maven 2.2.1 or later to build (3.x works as well).  Run th
 ```shell
 > mvn install
 ```
+
+
+## Release engineering
+
+Following steps must be done for a new release:
+
+```shell
+> mvn versions:set -DnewVersion=${VERSION_NUMBER} -DgenerateBackupPoms=false
+> git tag ${VERSION_NUMBER}
+> git push --tags
+> mvn clean deploy -Psonatype-oss-release
+> mvn versions:set -DnewVersion=${NEW_VERSION_NUMBER}-SNAPSHOT -DgenerateBackupPoms=false
+```
+
