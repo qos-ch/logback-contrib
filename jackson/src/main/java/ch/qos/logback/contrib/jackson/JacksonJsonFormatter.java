@@ -22,6 +22,8 @@ import java.util.Map;
 import ch.qos.logback.contrib.json.JsonFormatter;
 
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
@@ -56,6 +58,12 @@ public class JacksonJsonFormatter implements JsonFormatter {
         writer.flush();
 
         return writer.toString();
+    }
+
+    @Override
+    public Map parseJsonString(String json)
+            throws IOException, JsonParseException, JsonMappingException{
+        return this.objectMapper.readValue(json, Map.class);
     }
 
     public ObjectMapper getObjectMapper() {
