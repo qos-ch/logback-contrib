@@ -142,6 +142,9 @@ public class JsonLayout extends JsonLayoutBase<ILoggingEvent> {
     protected boolean includeContextName;
     protected boolean includeFileLine;
     protected boolean includeClassAndMethod;
+    protected boolean includeExceptionOnlyMsg; // effect as before set includeException
+    protected int maxExceptionStackLength = 1024; // max length of exception stack of string; default with 1024 byte
+    protected boolean needSubExceptionStack; // effect as before set includeException
 
     protected boolean needJsonFormatMessage;
 
@@ -265,7 +268,17 @@ public class JsonLayout extends JsonLayoutBase<ILoggingEvent> {
         if (this.includeException) {
             IThrowableProxy throwableProxy = event.getThrowableProxy();
             if (throwableProxy != null) {
-                String ex = throwableProxyConverter.convert(event);
+                String ex;
+
+                if(this.includeExceptionOnlyMsg){
+                    ex = throwableProxy.getMessage();
+                }else{
+                    ex = throwableProxyConverter.convert(event);
+                    if(this.needSubExceptionStack){
+                        ex = subStr(ex, this.maxExceptionStackLength);
+                    }
+                }
+
                 if (ex != null && !ex.equals("")) {
                     map.put(EXCEPTION_ATTR_NAME, ex);
                 }
@@ -362,4 +375,44 @@ public class JsonLayout extends JsonLayoutBase<ILoggingEvent> {
     public void setNeedJsonFormatMessage(boolean needJsonFormatMessage) {
         this.needJsonFormatMessage = needJsonFormatMessage;
     }
+
+    public boolean isIncludeExceptionOnlyMsg() {
+        return includeExceptionOnlyMsg;
+    }
+
+    public void setIncludeExceptionOnlyMsg(boolean includeExceptionOnlyMsg) {
+        this.includeExceptionOnlyMsg = includeExceptionOnlyMsg;
+    }
+
+    public boolean isNeedSubExceptionStack() {
+        return needSubExceptionStack;
+    }
+
+    public void setNeedSubExceptionStack(boolean needSubExceptionStack) {
+        this.needSubExceptionStack = needSubExceptionStack;
+    }
+
+    public int getMaxExceptionStackLength() {
+        return maxExceptionStackLength;
+    }
+
+    public void setMaxExceptionStackLength(int maxExceptionStackLength) {
+        this.maxExceptionStackLength = maxExceptionStackLength;
+    }
+
+    private static final String DEFAULT_SUFFIX = "......content truncated! real length is ";
+
+    private static String subStr(String orginStr, int maxLength) {
+        String result = (orginStr == null ? "" : orginStr);
+        int len = result.length();
+
+        if (len > maxLength) {
+            // real sub length = max length - suffix length
+            maxLength = maxLength - (DEFAULT_SUFFIX + len).length();
+            result = result.substring(0, maxLength) + DEFAULT_SUFFIX + len;
+        }
+
+        return result;
+    }
+
 }
