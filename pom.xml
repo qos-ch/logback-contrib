@@ -258,7 +258,7 @@
                 <artifactId>license-maven-plugin</artifactId>
                 <version>2.6</version>
                 <configuration>
-                    <header>${project.parent.basedir}/license-template.txt</header>
+                    <header>license-template.txt</header>
                     <properties>
                         <owner>The logback-contrib developers</owner>
                         <year>2014</year>
