@@ -219,7 +219,21 @@ public class JsonLayout extends JsonLayoutBase<ILoggingEvent> {
             }
         }
 
+        addCustomDataToJsonMap(map, event);
         return map;
+    }
+
+    /**
+     * Override to add custom data to the produced JSON from the logging event.
+     * Useful if you e.g. want to include the parameter array as a separate json attribute.
+     *
+     * @param map the map for JSON serialization, populated with data corresponding to the
+     *            configured attributes. Add new entries from the event to this map to have
+     *            them included in the produced JSON.
+     * @param event the logging event to extract data from.
+     */
+    protected void addCustomDataToJsonMap(Map<String, Object> map, ILoggingEvent event) {
+        // Nothing to do in default implementation
     }
 
     public boolean isIncludeLevel() {
