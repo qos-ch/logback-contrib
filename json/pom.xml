@@ -30,6 +30,7 @@
   <modules>
     <module>core</module>
     <module>classic</module>
+    <module>access</module>
   </modules>
 
 </project>
