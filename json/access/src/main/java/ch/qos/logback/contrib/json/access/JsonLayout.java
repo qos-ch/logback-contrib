@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2014, The logback-contrib developers. All rights reserved.
- * <p/>
+ *
  * This program and the accompanying materials are dual-licensed under
  * either the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation
- * <p/>
- * or (per the licensee's choosing)
- * <p/>
+ *
+ *   or (per the licensee's choosing)
+ *
  * under the terms of the GNU Lesser General Public License version 2.1
  * as published by the Free Software Foundation.
  */
@@ -41,7 +41,7 @@ import java.util.concurrent.TimeUnit;
  *     <tr>
  *         <td nowrap="nowrap">{@code remoteAddress}</td>
  *         <td nowrap="nowrap"><code>IAccessEvent.{@link ch.qos.logback.access.spi.IAccessEvent#getRemoteAddr() getRemoteAddr()}</code></td>
- *         <td></td>
+ *         <td>Internet Protocol (IP) address of the client or last proxy that sent the request.</td>
  *         <td>true</td>
  *     </tr>
  *     <tr>
@@ -95,13 +95,13 @@ import java.util.concurrent.TimeUnit;
  *     <tr>
  *         <td nowrap="nowrap">{@code remoteHost}</td>
  *         <td nowrap="nowrap"><code>IAccessEvent.{@link ch.qos.logback.access.spi.IAccessEvent#getRemoteHost() getRemoteHost()}</code></td>
- *         <td></td>
+ *         <td>Fully qualified name of the client or the last proxy that sent the request.</td>
  *         <td>true</td>
  *     </tr>
  *     <tr>
  *         <td nowrap="nowrap">{@code serverName}</td>
  *         <td nowrap="nowrap"><code>IAccessEvent.{@link ch.qos.logback.access.spi.IAccessEvent#getServerName() getServerName()}</code></td>
- *         <td></td>
+ *         <td>Name of the server to which the request was sent.</td>
  *         <td>true</td>
  *     </tr>
  *     <tr>
@@ -335,36 +335,12 @@ public class JsonLayout extends JsonLayoutBase<IAccessEvent> {
 
     }
 
-    public boolean isIncludeRequestURI() {
-        return includeRequestURI;
+    public boolean isIncludeRemoteAddr() {
+        return includeRemoteAddr;
     }
 
-    public void setIncludeRequestURI(boolean includeRequestURI) {
-        this.includeRequestURI = includeRequestURI;
-    }
-
-    public boolean isIncludeRequestURL() {
-        return includeRequestURL;
-    }
-
-    public void setIncludeRequestURL(boolean includeRequestURL) {
-        this.includeRequestURL = includeRequestURL;
-    }
-
-    public boolean isIncludeRequestHeader() {
-        return includeRequestHeader;
-    }
-
-    public void setIncludeRequestHeader(boolean includeRequestHeader) {
-        this.includeRequestHeader = includeRequestHeader;
-    }
-
-    public boolean isIncludeRemoteHost() {
-        return includeRemoteHost;
-    }
-
-    public void setIncludeRemoteHost(boolean includeRemoteHost) {
-        this.includeRemoteHost = includeRemoteHost;
+    public void setIncludeRemoteAddr(boolean includeRemoteAddr) {
+        this.includeRemoteAddr = includeRemoteAddr;
     }
 
     public boolean isIncludeRemoteUser() {
@@ -375,12 +351,28 @@ public class JsonLayout extends JsonLayoutBase<IAccessEvent> {
         this.includeRemoteUser = includeRemoteUser;
     }
 
-    public boolean isIncludeRemoteAddr() {
-        return includeRemoteAddr;
+    public boolean isIncludeRequestTime() {
+        return includeRequestTime;
     }
 
-    public void setIncludeRemoteAddr(boolean includeRemoteAddr) {
-        this.includeRemoteAddr = includeRemoteAddr;
+    public void setIncludeRequestTime(boolean includeRequestTime) {
+        this.includeRequestTime = includeRequestTime;
+    }
+
+    public boolean isIncludeRequestURI() {
+        return includeRequestURI;
+    }
+
+    public void setIncludeRequestURI(boolean includeRequestURI) {
+        this.includeRequestURI = includeRequestURI;
+    }
+
+    public boolean isIncludeStatusCode() {
+        return includeStatusCode;
+    }
+
+    public void setIncludeStatusCode(boolean includeStatusCode) {
+        this.includeStatusCode = includeStatusCode;
     }
 
     public boolean isIncludeMethod() {
@@ -399,12 +391,44 @@ public class JsonLayout extends JsonLayoutBase<IAccessEvent> {
         this.includeProtocol = includeProtocol;
     }
 
+    public boolean isIncludeContentLength() {
+        return includeContentLength;
+    }
+
+    public void setIncludeContentLength(boolean includeContentLength) {
+        this.includeContentLength = includeContentLength;
+    }
+
+    public boolean isIncludeRequestURL() {
+        return includeRequestURL;
+    }
+
+    public void setIncludeRequestURL(boolean includeRequestURL) {
+        this.includeRequestURL = includeRequestURL;
+    }
+
+    public boolean isIncludeRemoteHost() {
+        return includeRemoteHost;
+    }
+
+    public void setIncludeRemoteHost(boolean includeRemoteHost) {
+        this.includeRemoteHost = includeRemoteHost;
+    }
+
     public boolean isIncludeServerName() {
         return includeServerName;
     }
 
     public void setIncludeServerName(boolean includeServerName) {
         this.includeServerName = includeServerName;
+    }
+
+    public boolean isIncludeRequestHeader() {
+        return includeRequestHeader;
+    }
+
+    public void setIncludeRequestHeader(boolean includeRequestHeader) {
+        this.includeRequestHeader = includeRequestHeader;
     }
 
     public boolean isIncludeRequestParameter() {
@@ -415,36 +439,12 @@ public class JsonLayout extends JsonLayoutBase<IAccessEvent> {
         this.includeRequestParameter = includeRequestParameter;
     }
 
-    public boolean isIncludeStatusCode() {
-        return includeStatusCode;
-    }
-
-    public void setIncludeStatusCode(boolean includeStatusCode) {
-        this.includeStatusCode = includeStatusCode;
-    }
-
     public boolean isIncludeLocalPort() {
         return includeLocalPort;
     }
 
     public void setIncludeLocalPort(boolean includeLocalPort) {
         this.includeLocalPort = includeLocalPort;
-    }
-
-    public boolean isIncludeRequestTime() {
-        return includeRequestTime;
-    }
-
-    public void setIncludeRequestTime(boolean includeRequestTime) {
-        this.includeRequestTime = includeRequestTime;
-    }
-
-    public boolean isIncludeResponseContent() {
-        return includeResponseContent;
-    }
-
-    public void setIncludeResponseContent(boolean includeResponseContent) {
-        this.includeResponseContent = includeResponseContent;
     }
 
     public boolean isIncludeRequestContent() {
@@ -455,11 +455,11 @@ public class JsonLayout extends JsonLayoutBase<IAccessEvent> {
         this.includeRequestContent = includeRequestContent;
     }
 
-    public boolean isIncludeContentLength() {
-        return includeContentLength;
+    public boolean isIncludeResponseContent() {
+        return includeResponseContent;
     }
 
-    public void setIncludeContentLength(boolean includeContentLength) {
-        this.includeContentLength = includeContentLength;
+    public void setIncludeResponseContent(boolean includeResponseContent) {
+        this.includeResponseContent = includeResponseContent;
     }
 }
