@@ -1,12 +1,12 @@
 /**
- * Copyright (C) 2015, The logback-contrib developers. All rights reserved.
- *
+ * Copyright (C) 2014, The logback-contrib developers. All rights reserved.
+ * <p/>
  * This program and the accompanying materials are dual-licensed under
  * either the terms of the Eclipse Public License v1.0 as published by
  * the Eclipse Foundation
- *
- *   or (per the licensee's choosing)
- *
+ * <p/>
+ * or (per the licensee's choosing)
+ * <p/>
  * under the terms of the GNU Lesser General Public License version 2.1
  * as published by the Free Software Foundation.
  */
@@ -17,6 +17,7 @@ import ch.qos.logback.contrib.json.JsonLayoutBase;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A JsonLayout builds its {@link #toJsonMap(ch.qos.logback.access.spi.IAccessEvent) jsonMap} from a
@@ -38,20 +39,8 @@ import java.util.Map;
  *         <td>true</td>
  *     </tr>
  *     <tr>
- *         <td nowrap="nowrap">{@code url}</td>
- *         <td nowrap="nowrap"><code>IAccessEvent.{@link ch.qos.logback.access.spi.IAccessEvent#getRequestURL() getRequestURL()}</code></td>
- *         <td></td>
- *         <td>true</td>
- *     </tr>
- *     <tr>
- *         <td nowrap="nowrap">{@code uri}</td>
- *         <td nowrap="nowrap"><code>IAccessEvent.{@link ch.qos.logback.access.spi.IAccessEvent#getRequestURI() getRequestURI()}</code></td>
- *         <td></td>
- *         <td>true</td>
- *     </tr>
- *     <tr>
- *         <td nowrap="nowrap">{@code remoteHost}</td>
- *         <td nowrap="nowrap"><code>IAccessEvent.{@link ch.qos.logback.access.spi.IAccessEvent#getRemoteHost() getRemoteHost()}</code></td>
+ *         <td nowrap="nowrap">{@code remoteAddress}</td>
+ *         <td nowrap="nowrap"><code>IAccessEvent.{@link ch.qos.logback.access.spi.IAccessEvent#getRemoteAddr() getRemoteAddr()}</code></td>
  *         <td></td>
  *         <td>true</td>
  *     </tr>
@@ -62,8 +51,20 @@ import java.util.Map;
  *         <td>true</td>
  *     </tr>
  *     <tr>
- *         <td nowrap="nowrap">{@code remoteAddress}</td>
- *         <td nowrap="nowrap"><code>IAccessEvent.{@link ch.qos.logback.access.spi.IAccessEvent#getRemoteAddr() getRemoteAddr()}</code></td>
+ *         <td nowrap="nowrap">{@code requestTime}</td>
+ *         <td nowrap="nowrap">String value of <code>IAccessEvent.{@link ch.qos.logback.access.spi.IAccessEvent#getElapsedTime() getElapsedTime()}</code></td>
+ *         <td>The time elapsed between receiving the request and logging it. By default, the value is formatted as {@code s.SSS}</td>
+ *         <td>true</td>
+ *     </tr>
+ *     <tr>
+ *         <td nowrap="nowrap">{@code uri}</td>
+ *         <td nowrap="nowrap"><code>IAccessEvent.{@link ch.qos.logback.access.spi.IAccessEvent#getRequestURI() getRequestURI()}</code></td>
+ *         <td></td>
+ *         <td>true</td>
+ *     </tr>
+ *     <tr>
+ *         <td nowrap="nowrap">{@code status}</td>
+ *         <td nowrap="nowrap">String value of <code>IAccessEvent.{@link ch.qos.logback.access.spi.IAccessEvent#getStatusCode getStatusCode()}</code></td>
  *         <td></td>
  *         <td>true</td>
  *     </tr>
@@ -74,21 +75,39 @@ import java.util.Map;
  *         <td>true</td>
  *     </tr>
  *     <tr>
- *         <td nowrap="nowrap">{@code headers}</td>
- *         <td nowrap="nowrap"><code>IAccessEvent.{@link ch.qos.logback.access.spi.IAccessEvent#getRequestHeaderMap() getRequestHeaderMap()}</code></td>
- *         <td>This value is a {@code Map&lt;String,String&gt;}.</td>
- *         <td>true</td>
- *     </tr>
- *     <tr>
  *         <td nowrap="nowrap">{@code protocol}</td>
  *         <td nowrap="nowrap"><code>IAccessEvent.{@link ch.qos.logback.access.spi.IAccessEvent#getProtocol() getProtocol()}</code></td>
  *         <td></td>
  *         <td>true</td>
  *     </tr>
  *     <tr>
- *         <td nowrap="nowrap">{@code servername}</td>
+ *         <td nowrap="nowrap">{@code contentLength}</td>
+ *         <td nowrap="nowrap">String value of <code>IAccessEvent.{@link ch.qos.logback.access.spi.IAccessEvent#getContentLength() getContentLength()}</code></td>
+ *         <td></td>
+ *         <td>true</td>
+ *     </tr>
+ *     <tr>
+ *         <td nowrap="nowrap">{@code url}</td>
+ *         <td nowrap="nowrap"><code>IAccessEvent.{@link ch.qos.logback.access.spi.IAccessEvent#getRequestURL() getRequestURL()}</code></td>
+ *         <td></td>
+ *         <td>false</td>
+ *     </tr>
+ *     <tr>
+ *         <td nowrap="nowrap">{@code remoteHost}</td>
+ *         <td nowrap="nowrap"><code>IAccessEvent.{@link ch.qos.logback.access.spi.IAccessEvent#getRemoteHost() getRemoteHost()}</code></td>
+ *         <td></td>
+ *         <td>true</td>
+ *     </tr>
+ *     <tr>
+ *         <td nowrap="nowrap">{@code serverName}</td>
  *         <td nowrap="nowrap"><code>IAccessEvent.{@link ch.qos.logback.access.spi.IAccessEvent#getServerName() getServerName()}</code></td>
  *         <td></td>
+ *         <td>true</td>
+ *     </tr>
+ *     <tr>
+ *         <td nowrap="nowrap">{@code headers}</td>
+ *         <td nowrap="nowrap"><code>IAccessEvent.{@link ch.qos.logback.access.spi.IAccessEvent#getRequestHeaderMap() getRequestHeaderMap()}</code></td>
+ *         <td>This value is a {@code Map&lt;String,String&gt;}.</td>
  *         <td>true</td>
  *     </tr>
  *     <tr>
@@ -98,16 +117,22 @@ import java.util.Map;
  *         <td>true</td>
  *     </tr>
  *     <tr>
- *         <td nowrap="nowrap">{@code status}</td>
- *         <td nowrap="nowrap">String value of <code>IAccessEvent.{@link ch.qos.logback.access.spi.IAccessEvent#getStatusCode getStatusCode()}</code></td>
- *         <td></td>
- *         <td>true</td>
- *     </tr>
- *     <tr>
  *         <td nowrap="nowrap">{@code port}</td>
  *         <td nowrap="nowrap">String value of <code>IAccessEvent.{@link ch.qos.logback.access.spi.IAccessEvent#getLocalPort() getLocalPort()}</code></td>
  *         <td></td>
- *         <td>true</td>
+ *         <td>false</td>
+ *     </tr>
+ *     <tr>
+ *         <td nowrap="nowrap">{@code requestContent}</td>
+ *         <td nowrap="nowrap"><code>IAccessEvent.{@link ch.qos.logback.access.spi.IAccessEvent#getRequestContent() getRequestContent()}</code></td>
+ *         <td></td>
+ *         <td>false</td>
+ *     </tr>
+ *     <tr>
+ *         <td nowrap="nowrap">{@code responseContent}</td>
+ *         <td nowrap="nowrap"><code>IAccessEvent.{@link ch.qos.logback.access.spi.IAccessEvent#getResponseContent() getResponseContent()}</code></td>
+ *         <td></td>
+ *         <td>false</td>
  *     </tr>
  * </table>
  * <p/>
@@ -117,47 +142,59 @@ import java.util.Map;
 public class JsonLayout extends JsonLayoutBase<IAccessEvent> {
 
     public static final String TIMESTAMP_ATTR_NAME = "timestamp";
-    public static final String REQUESTURI_ATTR_NAME = "uri";
-    public static final String REQUESTURL_ATTR_NAME = "url";
-    public static final String REQUESTHEADER_ATTR_NAME = "headers";
-    public static final String REMOTEHOST_ATTR_NAME = "remoteHost";
-    public static final String REMOTEUSER_ATTR_NAME = "remoteUser";
     public static final String REMOTEADDR_ATTR_NAME = "remoteAddress";
+    public static final String REMOTEUSER_ATTR_NAME = "remoteUser";
+    public static final String REQUESTTIME_ATTR_NAME = "requestTime";
+    public static final String REQUESTURI_ATTR_NAME = "uri";
+    public static final String STATUSCODE_ATTR_NAME = "status";
     public static final String METHOD_ATTR_NAME = "method";
     public static final String PROTOCOL_ATTR_NAME = "protocol";
-    public static final String SERVERNAME_ATTR_NAME = "servername";
+    public static final String CONTENTLENGTH_ATTR_NAME = "contentLength";
+    public static final String REQUESTURL_ATTR_NAME = "url";
+    public static final String REMOTEHOST_ATTR_NAME = "remoteHost";
+    public static final String SERVERNAME_ATTR_NAME = "serverName";
+    public static final String REQUESTHEADER_ATTR_NAME = "headers";
     public static final String REQUESTPARAMETER_ATTR_NAME = "params";
-    public static final String STATUSCODE_ATTR_NAME = "status";
     public static final String LOCALPORT_ATTR_NAME = "port";
+    public static final String REQUESTCONTENT_ATTR_NAME = "requestContent";
+    public static final String RESPONSECONTENT_ATTR_NAME = "responseContent";
 
-    protected boolean includeRequestURI;
-    protected boolean includeRequestURL;
-    protected boolean includeRequestHeader;
-    protected boolean includeRemoteHost;
-    protected boolean includeRemoteUser;
     protected boolean includeRemoteAddr;
+    protected boolean includeRemoteUser;
+    protected boolean includeRequestTime;
+    protected boolean includeRequestURI;
+    protected boolean includeStatusCode;
     protected boolean includeMethod;
     protected boolean includeProtocol;
+    protected boolean includeContentLength;
+    protected boolean includeRequestURL;
+    protected boolean includeRemoteHost;
     protected boolean includeServerName;
+    protected boolean includeRequestHeader;
     protected boolean includeRequestParameter;
-    protected boolean includeStatusCode;
     protected boolean includeLocalPort;
+    protected boolean includeRequestContent;
+    protected boolean includeResponseContent;
 
 
     public JsonLayout() {
         super();
-        this.includeRequestURI = true;
-        this.includeRequestURL = true;
-        this.includeRequestHeader = true;
-        this.includeRemoteHost = true;
-        this.includeRemoteUser = true;
         this.includeRemoteAddr = true;
+        this.includeRemoteUser = true;
+        this.includeRequestTime = true;
+        this.includeRequestURI = true;
+        this.includeStatusCode = true;
         this.includeMethod = true;
         this.includeProtocol = true;
+        this.includeRequestURL = false;
+        this.includeContentLength = false;
+        this.includeRemoteHost = true;
         this.includeServerName = true;
-        this.includeStatusCode = true;
+        this.includeRequestHeader = true;
         this.includeRequestParameter = true;
-        this.includeLocalPort = true;
+        this.includeLocalPort = false;
+        this.includeRequestContent = false;
+        this.includeResponseContent = false;
     }
 
     @Override
@@ -172,10 +209,69 @@ public class JsonLayout extends JsonLayoutBase<IAccessEvent> {
             }
         }
 
+        if (this.includeRemoteAddr) {
+            String remoteAddr = event.getRemoteAddr();
+            if (remoteAddr == null) {
+                remoteAddr = event.getRemoteAddr();
+            }
+
+
+            if (remoteAddr != null) {
+                map.put(REMOTEADDR_ATTR_NAME, remoteAddr);
+            }
+        }
+
+        if (this.includeRemoteUser) {
+            String remoteUser = event.getRemoteUser();
+            if (remoteUser != null) {
+                map.put(REMOTEUSER_ATTR_NAME, remoteUser);
+            }
+        }
+
+        if (this.includeRequestTime) {
+            long elapsedTime = event.getElapsedTime();
+            if (elapsedTime > 0) {
+                final long sec = TimeUnit.MILLISECONDS.toSeconds(event.getElapsedTime());
+                final long ms = TimeUnit.MILLISECONDS.toMillis(event.getElapsedTime() - TimeUnit.SECONDS.toMillis(sec));
+                String time = String.format("%01d.%03d", sec, ms);
+                if (time != null) {
+                    map.put(REQUESTTIME_ATTR_NAME, time);
+                }
+            }
+        }
+
+        if (this.includeStatusCode) {
+            String statusCode = String.valueOf(event.getStatusCode());
+            if (statusCode != null) {
+                map.put(STATUSCODE_ATTR_NAME, statusCode);
+            }
+        }
+
+        if (this.includeMethod) {
+            String method = event.getMethod();
+            if (method != null) {
+                map.put(METHOD_ATTR_NAME, method);
+            }
+        }
+
         if (this.includeRequestURI) {
             String requestURI = event.getRequestURI();
             if (requestURI != null) {
                 map.put(REQUESTURI_ATTR_NAME, requestURI);
+            }
+        }
+
+        if (this.includeProtocol) {
+            String protocol = event.getProtocol();
+            if (protocol != null) {
+                map.put(PROTOCOL_ATTR_NAME, protocol);
+            }
+        }
+
+        if (this.includeContentLength) {
+            String contentLength = Long.toString(event.getContentLength());
+            if (contentLength != null) {
+                map.put(CONTENTLENGTH_ATTR_NAME, contentLength);
             }
         }
 
@@ -193,24 +289,10 @@ public class JsonLayout extends JsonLayoutBase<IAccessEvent> {
             }
         }
 
-        if (this.includeRemoteUser) {
-            String remoteUser = event.getRemoteUser();
-            if (remoteUser != null) {
-                map.put(REMOTEUSER_ATTR_NAME, remoteUser);
-            }
-        }
-
-        if (this.includeRemoteAddr) {
-            String remoteAddr = event.getRemoteAddr();
-            if (remoteAddr != null) {
-                map.put(REMOTEADDR_ATTR_NAME, remoteAddr);
-            }
-        }
-
-        if (this.includeMethod) {
-            String method = event.getMethod();
-            if (method != null) {
-                map.put(METHOD_ATTR_NAME, method);
+        if (this.includeServerName) {
+            String serverName = event.getServerName();
+            if (serverName != null) {
+                map.put(SERVERNAME_ATTR_NAME, serverName);
             }
         }
 
@@ -221,20 +303,6 @@ public class JsonLayout extends JsonLayoutBase<IAccessEvent> {
             }
         }
 
-        if (this.includeProtocol) {
-            String protocol = event.getProtocol();
-            if (protocol != null) {
-                map.put(PROTOCOL_ATTR_NAME, protocol);
-            }
-        }
-
-        if (this.includeServerName) {
-            String serverName = event.getServerName();
-            if (serverName != null) {
-                map.put(SERVERNAME_ATTR_NAME, serverName);
-            }
-        }
-
         if (this.includeRequestParameter) {
             Map<String, String[]> requestParameter = event.getRequestParameterMap();
             if ((requestParameter != null) && !requestParameter.isEmpty()) {
@@ -242,17 +310,24 @@ public class JsonLayout extends JsonLayoutBase<IAccessEvent> {
             }
         }
 
-        if (this.includeStatusCode) {
-            String statusCode = String.valueOf(event.getStatusCode());
-            if (statusCode != null) {
-                map.put(STATUSCODE_ATTR_NAME, statusCode);
-            }
-        }
-
         if (this.includeLocalPort) {
             String localPort = String.valueOf(event.getLocalPort());
             if (localPort != null) {
                 map.put(LOCALPORT_ATTR_NAME, localPort);
+            }
+        }
+
+        if (this.includeRequestContent) {
+            String requestContent = event.getRequestContent();
+            if (requestContent != null) {
+                map.put(REQUESTCONTENT_ATTR_NAME, requestContent);
+            }
+        }
+
+        if (this.includeResponseContent) {
+            String responseContent = event.getResponseContent();
+            if (responseContent != null) {
+                map.put(RESPONSECONTENT_ATTR_NAME, responseContent);
             }
         }
 
@@ -356,4 +431,35 @@ public class JsonLayout extends JsonLayoutBase<IAccessEvent> {
         this.includeLocalPort = includeLocalPort;
     }
 
+    public boolean isIncludeRequestTime() {
+        return includeRequestTime;
+    }
+
+    public void setIncludeRequestTime(boolean includeRequestTime) {
+        this.includeRequestTime = includeRequestTime;
+    }
+
+    public boolean isIncludeResponseContent() {
+        return includeResponseContent;
+    }
+
+    public void setIncludeResponseContent(boolean includeResponseContent) {
+        this.includeResponseContent = includeResponseContent;
+    }
+
+    public boolean isIncludeRequestContent() {
+        return includeRequestContent;
+    }
+
+    public void setIncludeRequestContent(boolean includeRequestContent) {
+        this.includeRequestContent = includeRequestContent;
+    }
+
+    public boolean isIncludeContentLength() {
+        return includeContentLength;
+    }
+
+    public void setIncludeContentLength(boolean includeContentLength) {
+        this.includeContentLength = includeContentLength;
+    }
 }

@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2015, The logback-contrib developers. All rights reserved.
+ * Copyright (C) 2014, The logback-contrib developers. All rights reserved.
  *
  * This program and the accompanying materials are dual-licensed under
  * either the terms of the Eclipse Public License v1.0 as published by
@@ -34,22 +34,6 @@ public class JsonLayoutTest {
     }
 
     @Test
-    public void smoke() throws Exception {
-        configure(TeztConstants.TEST_DIR_PREFIX + "input/json/smoke.xml");
-
-
-        ListAppender<IAccessEvent> listAppender = (ListAppender<IAccessEvent>) context.getAppender("LIST");
-        IAccessEvent event = DummyAccessEventBuilder.buildNewAccessEvent();
-        listAppender.doAppend(event);
-
-        assertEquals(1, listAppender.list.size());
-
-        assertEquals(1, listAppender.list.size());
-        IAccessEvent ae = listAppender.list.get(0);
-        assertNotNull(ae);
-    }
-
-    @Test
     public void jsonLayout() throws Exception {
         configure(TeztConstants.TEST_DIR_PREFIX + "input/json/jsonLayout.xml");
         ListAppender<IAccessEvent> listAppender = (ListAppender<IAccessEvent>) context.getAppender("STR_LIST");
@@ -69,8 +53,41 @@ public class JsonLayoutTest {
         assertTrue(log.contains("method=testMethod"));
         assertTrue(log.contains("headers={headerName1=headerValue1, headerName2=headerValue2}"));
         assertTrue(log.contains("protocol=testProtocol"));
-        assertTrue(log.contains("servername=testServerName"));
+        assertTrue(log.contains("serverName=testServerName"));
+        assertTrue(log.contains("status=200"));
+    }
+
+    @Test
+    public void jsonLayoutIncludeDefaultOff() throws Exception {
+        configure(TeztConstants.TEST_DIR_PREFIX + "input/json/jsonLayout.xml");
+        ListAppender<IAccessEvent> listAppender = (ListAppender<IAccessEvent>) context.getAppender("STR_LIST");
+        IAccessEvent event = DummyAccessEventBuilder.buildNewAccessEvent();
+        listAppender.doAppend(event);
+
+        assertEquals(1, listAppender.list.size());
+        IAccessEvent iAccessEvent = listAppender.list.get(0);
+
+        JsonLayout jsonLayout = new JsonLayout();
+        jsonLayout.setContext(context);
+        jsonLayout.includeRequestURL = true;
+        jsonLayout.includeContentLength = true;
+        jsonLayout.includeLocalPort = true;
+        jsonLayout.includeRequestContent = true;
+        jsonLayout.includeResponseContent = true;
+        String log = jsonLayout.doLayout(iAccessEvent);
+
+        assertTrue(log.contains("remoteHost=testHost"));
+        assertTrue(log.contains("remoteUser=testUser"));
+        assertTrue(log.contains("remoteAddress=testRemoteAddress"));
+        assertTrue(log.contains("method=testMethod"));
+        assertTrue(log.contains("headers={headerName1=headerValue1, headerName2=headerValue2}"));
+        assertTrue(log.contains("protocol=testProtocol"));
+        assertTrue(log.contains("contentLength=1000"));
+        assertTrue(log.contains("url=testMethod null testProtocol"));
+        assertTrue(log.contains("serverName=testServerName"));
         assertTrue(log.contains("status=200"));
         assertTrue(log.contains("port=11"));
+        assertTrue(log.contains("requestContent=request contents"));
+        assertTrue(log.contains("responseContent=response contents"));
     }
 }
