@@ -21,6 +21,10 @@ import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.read.ListAppender;
 import org.junit.Test;
 
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+
 import static org.junit.Assert.*;
 
 public class JsonLayoutTest {
@@ -47,14 +51,19 @@ public class JsonLayoutTest {
         jsonLayout.setContext(context);
         String log = jsonLayout.doLayout(iAccessEvent);
 
-        assertTrue(log.contains("remoteHost=testHost"));
-        assertTrue(log.contains("remoteUser=testUser"));
-        assertTrue(log.contains("remoteAddress=testRemoteAddress"));
-        assertTrue(log.contains("method=testMethod"));
-        assertTrue(log.contains("headers={headerName1=headerValue1, headerName2=headerValue2}"));
-        assertTrue(log.contains("protocol=testProtocol"));
-        assertTrue(log.contains("serverName=testServerName"));
-        assertTrue(log.contains("status=200"));
+        assertTrue(log.contains(String.format("%s=%s", JsonLayout.REMOTEHOST_ATTR_NAME, event.getRemoteHost())));
+        assertTrue(log.contains(String.format("%s=%s", JsonLayout.REMOTEUSER_ATTR_NAME, event.getRemoteUser())));
+        assertTrue(log.contains(String.format("%s=%s", JsonLayout.REMOTEADDR_ATTR_NAME, event.getRemoteAddr())));
+        assertTrue(log.contains(String.format("%s=%s", JsonLayout.METHOD_ATTR_NAME, event.getMethod())));
+        if(event.getRequestHeaderMap().size() == 2){
+            Iterator<Map.Entry<String, String>> iterator = event.getRequestHeaderMap().entrySet().iterator();
+            Map.Entry<String, String> firstInMap = iterator.next();
+            Map.Entry<String, String> secondInMap = iterator.next();
+            assertTrue(log.contains(String.format("%s={%s=%s, %s=%s}", JsonLayout.REQUESTHEADER_ATTR_NAME, firstInMap.getKey(), firstInMap.getValue(), secondInMap.getKey(), secondInMap.getValue())));
+        }
+        assertTrue(log.contains(String.format("%s=%s", JsonLayout.PROTOCOL_ATTR_NAME, event.getProtocol())));
+        assertTrue(log.contains(String.format("%s=%s", JsonLayout.SERVERNAME_ATTR_NAME, event.getServerName())));
+        assertTrue(log.contains(String.format("%s=%s", JsonLayout.STATUSCODE_ATTR_NAME, event.getStatusCode())));
     }
 
     @Test
@@ -76,18 +85,10 @@ public class JsonLayoutTest {
         jsonLayout.includeResponseContent = true;
         String log = jsonLayout.doLayout(iAccessEvent);
 
-        assertTrue(log.contains("remoteHost=testHost"));
-        assertTrue(log.contains("remoteUser=testUser"));
-        assertTrue(log.contains("remoteAddress=testRemoteAddress"));
-        assertTrue(log.contains("method=testMethod"));
-        assertTrue(log.contains("headers={headerName1=headerValue1, headerName2=headerValue2}"));
-        assertTrue(log.contains("protocol=testProtocol"));
-        assertTrue(log.contains("contentLength=1000"));
-        assertTrue(log.contains("url=testMethod null testProtocol"));
-        assertTrue(log.contains("serverName=testServerName"));
-        assertTrue(log.contains("status=200"));
-        assertTrue(log.contains("port=11"));
-        assertTrue(log.contains("requestContent=request contents"));
-        assertTrue(log.contains("responseContent=response contents"));
+        assertTrue(log.contains(String.format("%s=%s", JsonLayout.CONTENTLENGTH_ATTR_NAME, event.getContentLength())));
+        assertTrue(log.contains(String.format("%s=%s", JsonLayout.REQUESTURL_ATTR_NAME, event.getMethod())));
+        assertTrue(log.contains(String.format("%s=%s", JsonLayout.LOCALPORT_ATTR_NAME, event.getLocalPort())));
+        assertTrue(log.contains(String.format("%s=%s", JsonLayout.RESPONSECONTENT_ATTR_NAME, event.getResponseContent())));
+        assertTrue(log.contains(String.format("%s=%s", JsonLayout.REQUESTCONTENT_ATTR_NAME, event.getRequestContent())));
     }
 }
