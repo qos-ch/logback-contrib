@@ -101,9 +101,8 @@
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
 
         <!-- Test Dependencies: -->
-        <easymock.version>3.1</easymock.version>
+        <mockito.version>2.0.44-beta</mockito.version>
         <groovy.version>1.8.6</groovy.version>
-        <jmockit.version>0.999.15</jmockit.version>
         <junit.version>4.8.2</junit.version>
 
     </properties>
@@ -111,15 +110,9 @@
     <dependencies>
         <!-- Test Dependencies for _all_ children modules: -->
         <dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymock</artifactId>
-            <version>${easymock.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.googlecode.jmockit</groupId>
-            <artifactId>jmockit</artifactId>
-            <version>${jmockit.version}</version>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

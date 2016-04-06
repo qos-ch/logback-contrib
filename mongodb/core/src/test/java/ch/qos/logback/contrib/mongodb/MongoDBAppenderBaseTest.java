@@ -14,16 +14,14 @@ package ch.qos.logback.contrib.mongodb;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import mockit.Mocked;
-import mockit.NonStrictExpectations;
-import mockit.Verifications;
-import mockit.integration.junit4.JMockit;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import ch.qos.logback.contrib.mongodb.MongoDBAppenderBase;
 import ch.qos.logback.core.ContextBase;
 import ch.qos.logback.core.spi.DeferredProcessingAware;
 
@@ -31,6 +29,9 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.Mongo;
+import com.mongodb.MongoURI;
+
+import java.net.UnknownHostException;
 
 /**
  * Tests for {@link MongoDBAppenderBase}.
@@ -38,7 +39,7 @@ import com.mongodb.Mongo;
  * @author Christian Trutz
  * @since 0.1
  */
-@RunWith(JMockit.class)
+@RunWith(MockitoJUnitRunner.class)
 public class MongoDBAppenderBaseTest {
 
     // to be tested
@@ -106,11 +107,7 @@ public class MongoDBAppenderBaseTest {
         appender.start();
         // then appender should start
         assertTrue(appender.isStarted());
-        new Verifications() {
-            {
-                db.authenticate("", "password".toCharArray());
-            }
-        };
+        Mockito.verify(db).authenticate("", "password".toCharArray());
     }
 
     // TODO is empty password in MongoDB allowed?
@@ -121,11 +118,7 @@ public class MongoDBAppenderBaseTest {
         appender.start();
         // then appender should start
         assertTrue(appender.isStarted());
-        new Verifications() {
-            {
-                db.authenticate("username", "".toCharArray());
-            }
-        };
+        Mockito.verify(db).authenticate("username", "".toCharArray());
     }
 
     @Test
@@ -135,11 +128,7 @@ public class MongoDBAppenderBaseTest {
         appender.start();
         // then appender should start
         assertTrue(appender.isStarted());
-        new Verifications() {
-            {
-                db.authenticate("username", "password".toCharArray());
-            }
-        };
+        Mockito.verify(db).authenticate("username", "password".toCharArray());
     }
 
     @Test
@@ -149,11 +138,7 @@ public class MongoDBAppenderBaseTest {
         appender.start();
         appender.doAppend(event);
         // then invoke collection.insert(...)
-        new Verifications() {
-            {
-                collection.insert(dbObject);
-            }
-        };
+        Mockito.verify(collection).insert(dbObject);
     }
 
     @Test
@@ -164,11 +149,7 @@ public class MongoDBAppenderBaseTest {
         appender.doAppend(event);
         appender.stop();
         // then close MongoDB connection and stop appender
-        new Verifications() {
-            {
-                mongo.close();
-            }
-        };
+        Mockito.verify(mongo).close();
         assertFalse(appender.isStarted());
     }
 
@@ -177,34 +158,33 @@ public class MongoDBAppenderBaseTest {
     // MOCKING
     //
 
-    @Mocked
+    @Mock
     private Mongo mongo;
-    @Mocked
+    @Mock
     private DB db;
-    @Mocked
+    @Mock
     private DBCollection collection;
-    @Mocked
+    @Mock
     private DeferredProcessingAware event;
+    @Mock
+    private MongoFactory mongoFactory;
 
     // this object will be inserted in MongoDB and represents an logging event
     private BasicDBObject dbObject = new BasicDBObject();
 
     @Before
-    public void before() {
-        appender = new MongoDBAppenderBase<DeferredProcessingAware>() {
+    public void before() throws UnknownHostException {
+        Mockito.when(mongoFactory.createMongo(Mockito.any(MongoURI.class))).thenReturn(mongo);
+
+        appender = new MongoDBAppenderBase<DeferredProcessingAware>(mongoFactory) {
             @Override
             protected BasicDBObject toMongoDocument(DeferredProcessingAware event) {
                 return dbObject;
             }
         };
         appender.setContext(new ContextBase());
-        new NonStrictExpectations() {
-            {
-                mongo.getDB("database");
-                result = db;
-                db.getCollection("collection");
-                result = collection;
-            }
-        };
+
+        Mockito.when(mongo.getDB("database")).thenReturn(db);
+        Mockito.when(db.getCollection("collection")).thenReturn(collection);
     }
 }
