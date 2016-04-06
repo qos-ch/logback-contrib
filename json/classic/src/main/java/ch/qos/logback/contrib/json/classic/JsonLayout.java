@@ -13,6 +13,7 @@
 package ch.qos.logback.contrib.json.classic;
 
 import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.pattern.ThrowableHandlingConverter;
 import ch.qos.logback.classic.pattern.ThrowableProxyConverter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
@@ -120,7 +121,7 @@ public class JsonLayout extends JsonLayoutBase<ILoggingEvent> {
     protected boolean includeException;
     protected boolean includeContextName;
 
-    private final ThrowableProxyConverter throwableProxyConverter;
+    private ThrowableHandlingConverter throwableProxyConverter;
 
     public JsonLayout() {
         super();
@@ -298,5 +299,13 @@ public class JsonLayout extends JsonLayoutBase<ILoggingEvent> {
 
     public void setIncludeContextName(boolean includeContextName) {
         this.includeContextName = includeContextName;
+    }
+
+    public ThrowableHandlingConverter getThrowableProxyConverter() {
+        return throwableProxyConverter;
+    }
+
+    public void setThrowableProxyConverter(ThrowableHandlingConverter throwableProxyConverter) {
+        this.throwableProxyConverter = throwableProxyConverter;
     }
 }
