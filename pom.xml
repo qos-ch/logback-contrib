@@ -292,13 +292,9 @@
                         <year>2016</year>
                         <email>logback-user@qos.ch</email>
                     </properties>
-                    <excludes>
-                        <exclude>**/README*</exclude>
-                        <exclude>**/LICENSE*</exclude>
-                        <exclude>**/AUTHORS*</exclude>
-                        <exclude>src/test/resources/**</exclude>
-                        <exclude>src/main/resources/**</exclude>
-                    </excludes>
+                    <includes>
+                        <include>**/*.java</include>
+                    </includes>
                 </configuration>
                 <executions>
                     <execution>
