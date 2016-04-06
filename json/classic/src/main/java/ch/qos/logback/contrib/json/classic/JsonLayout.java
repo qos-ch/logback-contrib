@@ -14,6 +14,7 @@ package ch.qos.logback.contrib.json.classic;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.pattern.ThrowableProxyConverter;
+import ch.qos.logback.classic.spi.CallerData;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.contrib.json.JsonLayoutBase;
@@ -91,6 +92,18 @@ import java.util.Map;
  *         <td>The name of the logger context. Defaults to <em>default</em>.</td>
  *         <td>true</td>
  *     </tr>
+ *     <tr>
+ *         <td nowrap="nowrap">{@code file-line}</td>
+ *         <td nowrap="nowrap"><code>ILoggingEvent.{@link ch.qos.logback.classic.spi.ILoggingEvent#getCallerData() getCallerData()}</code></td>
+ *         <td>StackTraceElement.getFileName() + ":" + StackTraceElement.getLineNumber(); since version 0.1.3</td>
+ *         <td>false</td>
+ *     </tr>
+ *     <tr>
+ *         <td nowrap="nowrap">{@code class-method}</td>
+ *         <td nowrap="nowrap"><code>ILoggingEvent.{@link ch.qos.logback.classic.spi.ILoggingEvent#getCallerData() getCallerData()}</code></td>
+ *         <td>StackTraceElement.getClassName() + "@" + StackTraceElement.getMethodName() since version 0.1.3</td>
+ *         <td>false</td>
+ *     </tr>
  * </table>
  * <p/>
  * The constructed Map will be serialized to JSON via the parent class's {@link #getJsonFormatter() jsonFormatter}.
@@ -110,6 +123,10 @@ public class JsonLayout extends JsonLayoutBase<ILoggingEvent> {
     public static final String MESSAGE_ATTR_NAME = "raw-message";
     public static final String EXCEPTION_ATTR_NAME = "exception";
     public static final String CONTEXT_ATTR_NAME = "context";
+    public static final String FILE_LINE_ATTR_NAME = "file-line";
+    public static final String CLASS_METHOD_ATTR_NAME = "class-method";
+    public static final String FILE_LINE_SEPARATOR = ":";
+    public static final String CLASS_METHOD_SEPARATOR = "@";
 
     protected boolean includeLevel;
     protected boolean includeThreadName;
@@ -119,6 +136,13 @@ public class JsonLayout extends JsonLayoutBase<ILoggingEvent> {
     protected boolean includeMessage;
     protected boolean includeException;
     protected boolean includeContextName;
+    protected boolean includeFileLine;
+    protected boolean includeClassAndMethod;
+    protected boolean includeExceptionOnlyMsg; // effect as before set includeException
+    protected int maxExceptionStackLength = 1024; // max length of exception stack of string; default with 1024 byte
+    protected boolean needSubExceptionStack; // effect as before set includeException
+
+    protected boolean needJsonFormatMessage;
 
     private final ThrowableProxyConverter throwableProxyConverter;
 
@@ -191,7 +215,16 @@ public class JsonLayout extends JsonLayoutBase<ILoggingEvent> {
         if (this.includeFormattedMessage) {
             String msg = event.getFormattedMessage();
             if (msg != null) {
-                map.put(FORMATTED_MESSAGE_ATTR_NAME, msg);
+                if(this.needJsonFormatMessage){
+                    try {
+                        Map msgMap = jsonFormatter.parseJsonString(msg);
+                        map.put(FORMATTED_MESSAGE_ATTR_NAME, msgMap);
+                    } catch (Exception e) {
+                        map.put(FORMATTED_MESSAGE_ATTR_NAME, msg);
+                    }
+                }else{
+                    map.put(FORMATTED_MESSAGE_ATTR_NAME, msg);
+                }
             }
         }
 
@@ -209,10 +242,39 @@ public class JsonLayout extends JsonLayoutBase<ILoggingEvent> {
             }
         }
 
+        if (this.includeFileLine){
+            StackTraceElement[] cda = event.getCallerData();
+            if (cda != null && cda.length > 0) {
+                map.put(FILE_LINE_ATTR_NAME, cda[0].getFileName() + FILE_LINE_SEPARATOR + cda[0].getLineNumber());
+            } else {
+                map.put(FILE_LINE_ATTR_NAME, CallerData.NA);
+            }
+        }
+
+        if(this.includeClassAndMethod){
+            StackTraceElement[] cda = event.getCallerData();
+            if (cda != null && cda.length > 0) {
+                map.put(CLASS_METHOD_ATTR_NAME, cda[0].getClassName() + CLASS_METHOD_SEPARATOR + cda[0].getMethodName());
+            } else {
+                map.put(CLASS_METHOD_ATTR_NAME, CallerData.NA);
+            }
+        }
+
+
         if (this.includeException) {
             IThrowableProxy throwableProxy = event.getThrowableProxy();
             if (throwableProxy != null) {
-                String ex = throwableProxyConverter.convert(event);
+                String ex;
+
+                if(this.includeExceptionOnlyMsg){
+                    ex = throwableProxy.getMessage();
+                }else{
+                    ex = throwableProxyConverter.convert(event);
+                    if(this.needSubExceptionStack){
+                        ex = subStr(ex, this.maxExceptionStackLength);
+                    }
+                }
+
                 if (ex != null && !ex.equals("")) {
                     map.put(EXCEPTION_ATTR_NAME, ex);
                 }
@@ -299,4 +361,68 @@ public class JsonLayout extends JsonLayoutBase<ILoggingEvent> {
     public void setIncludeContextName(boolean includeContextName) {
         this.includeContextName = includeContextName;
     }
+
+    public boolean isIncludeClassAndMethod() {
+        return includeClassAndMethod;
+    }
+
+    public void setIncludeClassAndMethod(boolean includeClassAndMethod) {
+        this.includeClassAndMethod = includeClassAndMethod;
+    }
+
+    public boolean isIncludeFileLine() {
+        return includeFileLine;
+    }
+
+    public void setIncludeFileLine(boolean includeFileLine) {
+        this.includeFileLine = includeFileLine;
+    }
+
+    public boolean isNeedJsonFormatMessage() {
+        return needJsonFormatMessage;
+    }
+
+    public void setNeedJsonFormatMessage(boolean needJsonFormatMessage) {
+        this.needJsonFormatMessage = needJsonFormatMessage;
+    }
+
+    public boolean isIncludeExceptionOnlyMsg() {
+        return includeExceptionOnlyMsg;
+    }
+
+    public void setIncludeExceptionOnlyMsg(boolean includeExceptionOnlyMsg) {
+        this.includeExceptionOnlyMsg = includeExceptionOnlyMsg;
+    }
+
+    public boolean isNeedSubExceptionStack() {
+        return needSubExceptionStack;
+    }
+
+    public void setNeedSubExceptionStack(boolean needSubExceptionStack) {
+        this.needSubExceptionStack = needSubExceptionStack;
+    }
+
+    public int getMaxExceptionStackLength() {
+        return maxExceptionStackLength;
+    }
+
+    public void setMaxExceptionStackLength(int maxExceptionStackLength) {
+        this.maxExceptionStackLength = maxExceptionStackLength;
+    }
+
+    private static final String DEFAULT_SUFFIX = "......content truncated! real length is ";
+
+    private static String subStr(String orginStr, int maxLength) {
+        String result = (orginStr == null ? "" : orginStr);
+        int len = result.length();
+
+        if (len > maxLength) {
+            // real sub length = max length - suffix length
+            maxLength = maxLength - (DEFAULT_SUFFIX + len).length();
+            result = result.substring(0, maxLength) + DEFAULT_SUFFIX + len;
+        }
+
+        return result;
+    }
+
 }

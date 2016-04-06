@@ -30,4 +30,14 @@ public interface JsonFormatter {
      * @throws Exception if there is a problem converting the map to a String.
      */
     String toJsonString(Map m) throws Exception;
+
+    /**
+     * Converts the specified JSON string into a Map.
+     * @since 0.1.3  by angus.aqlu@gmail.com
+     *
+     * @param json the String to be converted
+     * @return a MAP instance
+     * @throws Exception if there is a problem converting the json to a Map.
+     */
+    Map parseJsonString(String json) throws Exception;
 }
