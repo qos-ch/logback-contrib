@@ -220,6 +220,7 @@
                     <goals>deploy</goals>
                     <arguments>-Prelease</arguments>
                     <mavenExecutorId>forked-path</mavenExecutorId>
+                    <tagNameFormat>v_@{project.version}</tagNameFormat>
                 </configuration>
             </plugin>
             <plugin>
