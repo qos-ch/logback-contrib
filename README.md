@@ -1,5 +1,5 @@
 # logback-contrib [![Build Status](https://travis-ci.org/qos-ch/logback-contrib.svg?branch=master)](https://travis-ci.org/qos-ch/logback-contrib)
-<sup>v0.1.3</sup>
+<sup>v0.1.4</sup>
 
 https://github.com/qos-ch/logback-contrib/wiki
 
