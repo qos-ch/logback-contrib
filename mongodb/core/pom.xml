@@ -19,7 +19,7 @@
     <parent>
         <groupId>ch.qos.logback.contrib</groupId>
         <artifactId>logback-mongodb-parent</artifactId>
-        <version>0.1.3</version>
+        <version>0.1.4-SNAPSHOT</version>
     </parent>
 
     <artifactId>logback-mongodb-core</artifactId>
