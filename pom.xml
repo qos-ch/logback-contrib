@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (C) 2014, The logback-contrib developers. All rights reserved.
+    Copyright (C) 2016, The logback-contrib developers. All rights reserved.
 
     This program and the accompanying materials are dual-licensed under
     either the terms of the Eclipse Public License v1.0 as published by
@@ -256,7 +256,7 @@
                     <header>license-template.txt</header>
                     <properties>
                         <owner>The logback-contrib developers</owner>
-                        <year>2014</year>
+                        <year>2016</year>
                         <email>logback-user@qos.ch</email>
                     </properties>
                     <excludes>
