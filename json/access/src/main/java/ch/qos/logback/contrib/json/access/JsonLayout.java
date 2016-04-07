@@ -242,9 +242,7 @@ public class JsonLayout extends JsonLayoutBase<IAccessEvent> {
 
         if (this.includeStatusCode) {
             String statusCode = String.valueOf(event.getStatusCode());
-            if (statusCode != null) {
-                map.put(STATUSCODE_ATTR_NAME, statusCode);
-            }
+            map.put(STATUSCODE_ATTR_NAME, statusCode);
         }
 
         if (this.includeMethod) {
@@ -270,9 +268,7 @@ public class JsonLayout extends JsonLayoutBase<IAccessEvent> {
 
         if (this.includeContentLength) {
             String contentLength = Long.toString(event.getContentLength());
-            if (contentLength != null) {
-                map.put(CONTENTLENGTH_ATTR_NAME, contentLength);
-            }
+            map.put(CONTENTLENGTH_ATTR_NAME, contentLength);
         }
 
         if (this.includeRequestURL) {
@@ -312,9 +308,7 @@ public class JsonLayout extends JsonLayoutBase<IAccessEvent> {
 
         if (this.includeLocalPort) {
             String localPort = String.valueOf(event.getLocalPort());
-            if (localPort != null) {
-                map.put(LOCALPORT_ATTR_NAME, localPort);
-            }
+            map.put(LOCALPORT_ATTR_NAME, localPort);
         }
 
         if (this.includeRequestContent) {
