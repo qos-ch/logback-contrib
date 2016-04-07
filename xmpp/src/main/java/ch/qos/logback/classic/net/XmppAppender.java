@@ -11,7 +11,7 @@ import org.jivesoftware.smack.packet.Message;
  * XMMP (Jabber / GoogleHangout) async appender
  * <p>It is recommended to wrap it with AsyncAppender</p>
  * @see ch.qos.logback.classic.AsyncAppender
- * @author szalik
+ * @author m-szalik
  */
 public class XmppAppender<E> extends AppenderBase<E> {
 	private ConnectionConfiguration connectionConfiguration;
@@ -118,7 +118,6 @@ public class XmppAppender<E> extends AppenderBase<E> {
 			conn.login(username, password, resourceName);
 			ChatManager chatmanager = conn.getChatManager();
 			Chat chat = chatmanager.createChat(sendToJid, new MessageListener() {
-				@Override
 				public void processMessage(Chat chat, Message msg) { /* ignore incoming messages */	}
 			});
 			Roster roster = conn.getRoster();
