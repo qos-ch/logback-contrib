@@ -86,11 +86,9 @@ public class XmppAppender<E> extends AppenderBase<E> {
         super.stop();
         boolean doStop = isStarted();
         super.stop();
-        if (doStop) {
-            if (conn != null && conn.isConnected()) {
-                conn.disconnect();
-                chat = null;
-            }
+        if (doStop && conn != null && conn.isConnected()) {
+            conn.disconnect();
+            chat = null;
         }
     }
 
