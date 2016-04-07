@@ -117,7 +117,7 @@ public class XmppAppender<E> extends AppenderBase<E> {
         }
     }
 
-    protected XMPPConnection createXmppConnection() {
+    XMPPConnection createXmppConnection() {
         return new XMPPConnection(connectionConfiguration);
     }
 
