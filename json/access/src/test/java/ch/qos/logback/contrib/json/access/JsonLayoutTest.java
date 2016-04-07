@@ -29,9 +29,9 @@ import static org.junit.Assert.*;
 
 public class JsonLayoutTest {
 
-    AccessContext context = new AccessContext();
+    private AccessContext context = new AccessContext();
 
-    void configure(String file) throws JoranException {
+    private void configure(String file) throws JoranException {
         JoranConfigurator jc = new JoranConfigurator();
         jc.setContext(context);
         jc.doConfigure(file);
