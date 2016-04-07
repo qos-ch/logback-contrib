@@ -21,7 +21,6 @@ import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.read.ListAppender;
 import org.junit.Test;
 
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 
