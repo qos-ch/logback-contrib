@@ -83,7 +83,6 @@ public class XmppAppender<E> extends AppenderBase<E> {
 
     @Override
     public void stop() {
-        super.stop();
         boolean doStop = isStarted();
         super.stop();
         if (doStop && conn != null && conn.isConnected()) {
@@ -96,11 +95,7 @@ public class XmppAppender<E> extends AppenderBase<E> {
     public void start() {
         Roster.setDefaultSubscriptionMode(Roster.SubscriptionMode.accept_all);
         connectionConfiguration = new ConnectionConfiguration(xmmpServer, xmmpPort);
-        try {
-            xmmpConnect();
-        } catch (XMPPException e) {
-            addWarn(formatLogMessage("Unable to connect to xmmp server!"), e);
-        }
+        xmmpConnect();
         super.start();
     }
 
@@ -109,11 +104,7 @@ public class XmppAppender<E> extends AppenderBase<E> {
     protected void append(E event) {
         if (chat == null) {
             addInfo(formatLogMessage("Connecting to xmmp server - " + xmmpServer + ":" + xmmpPort));
-            try {
-                xmmpConnect();
-            } catch (XMPPException e) {
-                /* ignore */
-            }
+            xmmpConnect();
         }
         if (chat != null) {
             Message message = new Message(sendToJid);
@@ -126,10 +117,13 @@ public class XmppAppender<E> extends AppenderBase<E> {
         }
     }
 
+    protected XMPPConnection createXmppConnection() {
+        return new XMPPConnection(connectionConfiguration);
+    }
 
-    private synchronized void xmmpConnect() throws XMPPException {
+    private synchronized void xmmpConnect() {
         try {
-            XMPPConnection conn = new XMPPConnection(connectionConfiguration);
+            XMPPConnection conn = createXmppConnection();
             conn.connect();
             conn.login(username, password, resourceName);
             ChatManager chatmanager = conn.getChatManager();
@@ -147,7 +141,6 @@ public class XmppAppender<E> extends AppenderBase<E> {
             this.chat = null;
             this.conn = null;
             addError(formatLogMessage("Error connecting to " + xmmpServer + ':' + xmmpPort), e);
-            throw e;
         }
     }
 
