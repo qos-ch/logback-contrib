@@ -13,29 +13,32 @@
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  
+
+    <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>ch.qos.logback.contrib</groupId>
-        <artifactId>logback-json-parent</artifactId>
+        <artifactId>logback-contrib-parent</artifactId>
         <version>0.1.5-SNAPSHOT</version>
     </parent>
 
-    <modelVersion>4.0.0</modelVersion>
-    <artifactId>logback-json-classic</artifactId>
-    <name>Logback Contrib :: JSON :: Classic</name>
+    <artifactId>logback-janino-fragment</artifactId>
+    <name>Logback Contrib :: Janino Fragment</name>
+    <description>Needed to uses Janino together with logback in an OSGi environment.</description>
     <packaging>jar</packaging>
 
-    <dependencies>
-      <dependency>
-           <groupId>ch.qos.logback</groupId>
-           <artifactId>logback-classic</artifactId>
-           <version>${logback.version}</version>
-       </dependency>
-        <dependency>
-            <groupId>ch.qos.logback.contrib</groupId>
-            <artifactId>logback-json-core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>maven-bundle-plugin</artifactId>
+                <configuration>
+                    <instructions>
+                        <_include>src/main/resources/META-INF/MANIFEST.MF</_include>
+                    </instructions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
