@@ -29,7 +29,7 @@ import org.jivesoftware.smack.packet.Message;
  * XMMP (Jabber / GoogleHangout) async appender
  * <p>It is recommended to wrap it with AsyncAppender</p>
  * @see ch.qos.logback.classic.AsyncAppender
- * @author m-szalik
+ * @author szalik
  */
 public class XmppAppender<E> extends AppenderBase<E> {
     private ConnectionConfiguration connectionConfiguration;
