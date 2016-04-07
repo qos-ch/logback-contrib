@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014, The logback-contrib developers. All rights reserved.
+ * Copyright (C) 2016, The logback-contrib developers. All rights reserved.
  *
  * This program and the accompanying materials are dual-licensed under
  * either the terms of the Eclipse Public License v1.0 as published by
@@ -13,6 +13,7 @@
 package ch.qos.logback.contrib.json.classic;
 
 import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.pattern.ThrowableHandlingConverter;
 import ch.qos.logback.classic.pattern.ThrowableProxyConverter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
@@ -120,7 +121,7 @@ public class JsonLayout extends JsonLayoutBase<ILoggingEvent> {
     protected boolean includeException;
     protected boolean includeContextName;
 
-    private final ThrowableProxyConverter throwableProxyConverter;
+    private ThrowableHandlingConverter throwableProxyConverter;
 
     public JsonLayout() {
         super();
@@ -219,7 +220,21 @@ public class JsonLayout extends JsonLayoutBase<ILoggingEvent> {
             }
         }
 
+        addCustomDataToJsonMap(map, event);
         return map;
+    }
+
+    /**
+     * Override to add custom data to the produced JSON from the logging event.
+     * Useful if you e.g. want to include the parameter array as a separate json attribute.
+     *
+     * @param map the map for JSON serialization, populated with data corresponding to the
+     *            configured attributes. Add new entries from the event to this map to have
+     *            them included in the produced JSON.
+     * @param event the logging event to extract data from.
+     */
+    protected void addCustomDataToJsonMap(Map<String, Object> map, ILoggingEvent event) {
+        // Nothing to do in default implementation
     }
 
     public boolean isIncludeLevel() {
@@ -284,5 +299,13 @@ public class JsonLayout extends JsonLayoutBase<ILoggingEvent> {
 
     public void setIncludeContextName(boolean includeContextName) {
         this.includeContextName = includeContextName;
+    }
+
+    public ThrowableHandlingConverter getThrowableProxyConverter() {
+        return throwableProxyConverter;
+    }
+
+    public void setThrowableProxyConverter(ThrowableHandlingConverter throwableProxyConverter) {
+        this.throwableProxyConverter = throwableProxyConverter;
     }
 }

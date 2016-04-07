@@ -1,5 +1,5 @@
-<h1>logback-contrib <a href='https://logback.ci.cloudbees.com/job/logback-contrib/job/logback-contrib-OracleJDK7-SNAPSHOT/'><img src='https://logback.ci.cloudbees.com/buildStatus/icon?job=logback-contrib/logback-contrib-OracleJDK7-SNAPSHOT'></a></h1>
-<sup>v0.1.2</sup>
+# logback-contrib [![Build Status](https://travis-ci.org/qos-ch/logback-contrib.svg?branch=master)](https://travis-ci.org/qos-ch/logback-contrib)
+<sup>v0.1.4</sup>
 
 https://github.com/qos-ch/logback-contrib/wiki
 
