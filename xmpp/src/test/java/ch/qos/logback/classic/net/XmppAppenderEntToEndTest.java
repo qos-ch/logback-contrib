@@ -40,7 +40,10 @@ public class XmppAppenderEntToEndTest {
             logger.info("Exception text.", e);
         }
     }
-    
+
+    /**
+     * Wait for async thread to deliver the message, before java process is killed.
+     */
     @After
     public void waitFor() throws InterruptedException {
         Thread.sleep(1800);
