@@ -1,4 +1,0 @@
-language: java
-notifications:
-  email:
-      - notification@qos.ch
