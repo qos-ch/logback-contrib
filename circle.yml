@@ -1,0 +1,12 @@
+# Configuration for CircleCI
+# https://www.codacy.com/app/tony19/logback-contrib
+
+general:
+  branches:
+    ignore:
+      - gh-pages
+
+test:
+  post:
+    - mkdir -p $CIRCLE_TEST_REPORTS/junit/
+    - find . -type f -name "TEST-*.xml" -exec cp -v {} $CIRCLE_TEST_REPORTS/junit/ \;
