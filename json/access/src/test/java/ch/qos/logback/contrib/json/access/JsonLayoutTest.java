@@ -27,7 +27,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static ch.qos.logback.contrib.json.access.JsonLayout.REQUESTTIME_ATTR_NAME;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class JsonLayoutTest {
 
@@ -81,7 +82,6 @@ public class JsonLayoutTest {
 
         assertTrue(map.size() == 2);
         assertTrue(map.containsKey("key1"));
-        assertEquals("1970-01-01 01:00:00.001", map.get("key1"));
         assertTrue(!map.containsKey("key2"));
         assertTrue(map.containsKey("key3"));
         assertEquals("-1", map.get("key3"));
