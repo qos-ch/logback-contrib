@@ -1,4 +1,4 @@
-# logback-contrib [![Build Status](https://travis-ci.org/qos-ch/logback-contrib.svg?branch=master)](https://travis-ci.org/qos-ch/logback-contrib)
+# logback-contrib [![CircleCI](https://img.shields.io/circleci/project/qos-ch/logback-contrib.svg)](https://circleci.com/gh/qos-ch/logback-contrib/)
 <sup>v0.1.4</sup>
 
 https://github.com/qos-ch/logback-contrib/wiki
