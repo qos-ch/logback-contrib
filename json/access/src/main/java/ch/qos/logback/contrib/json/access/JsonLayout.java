@@ -222,10 +222,8 @@ public class JsonLayout extends JsonLayoutBase<IAccessEvent> {
     }
 
     protected void addMap(String key, boolean field, Map<String, ?> mapValue, Map<String, Object> map) {
-        if (field) {
-            if ((mapValue != null) && !mapValue.isEmpty()) {
-                map.put(key, mapValue);
-            }
+        if (field && mapValue != null && !mapValue.isEmpty()) {
+            map.put(key, mapValue);
         }
     }
 
