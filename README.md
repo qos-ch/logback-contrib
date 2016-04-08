@@ -1,4 +1,4 @@
-# logback-contrib [![CircleCI](https://img.shields.io/circleci/project/qos-ch/logback-contrib.svg)](https://circleci.com/gh/qos-ch/logback-contrib/)
+# logback-contrib [![CircleCI](https://img.shields.io/circleci/project/qos-ch/logback-contrib.svg)](https://circleci.com/gh/qos-ch/logback-contrib/) [![Codacy Badge](https://api.codacy.com/project/badge/grade/54cabaae90514969b3d0f8b27e91d027)](https://www.codacy.com/app/tony19/logback-contrib)
 <sup>v0.1.4</sup>
 
 https://github.com/qos-ch/logback-contrib/wiki
