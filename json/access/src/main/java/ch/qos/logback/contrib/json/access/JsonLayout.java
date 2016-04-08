@@ -221,7 +221,7 @@ public class JsonLayout extends JsonLayoutBase<IAccessEvent> {
         return map;
     }
 
-    void addMap(String key, boolean field, Map<String, ?> mapValue, Map<String, Object> map) {
+    protected void addMap(String key, boolean field, Map<String, ?> mapValue, Map<String, Object> map) {
         if (field) {
             if ((mapValue != null) && !mapValue.isEmpty()) {
                 map.put(key, mapValue);
@@ -229,20 +229,18 @@ public class JsonLayout extends JsonLayoutBase<IAccessEvent> {
         }
     }
 
-    void addRequestTime(long requestTime, Map<String, Object> map) {
-        if (this.includeRequestTime) {
-            if (requestTime > 0) {
-                final long sec = TimeUnit.MILLISECONDS.toSeconds(requestTime);
-                final long ms = TimeUnit.MILLISECONDS.toMillis(requestTime - TimeUnit.SECONDS.toMillis(sec));
-                String time = String.format("%01d.%03d", sec, ms);
-                if (time != null) {
-                    map.put(REQUESTTIME_ATTR_NAME, time);
-                }
+    protected void addRequestTime(long requestTime, Map<String, Object> map) {
+        if (this.includeRequestTime && requestTime > 0) {
+            final long sec = TimeUnit.MILLISECONDS.toSeconds(requestTime);
+            final long ms = TimeUnit.MILLISECONDS.toMillis(requestTime - TimeUnit.SECONDS.toMillis(sec));
+            String time = String.format("%01d.%03d", sec, ms);
+            if (time != null) {
+                map.put(REQUESTTIME_ATTR_NAME, time);
             }
         }
     }
 
-    void addTimestamp(String key, boolean field, long timeStamp, Map<String, Object> map) {
+    protected void addTimestamp(String key, boolean field, long timeStamp, Map<String, Object> map) {
         if(field){
             String formatted = formatTimestamp(timeStamp);
             if (formatted != null) {
@@ -251,18 +249,16 @@ public class JsonLayout extends JsonLayoutBase<IAccessEvent> {
         }
     }
 
-    void addInt(String key, boolean field, int intValue, Map<String, Object> map) {
+    protected void addInt(String key, boolean field, int intValue, Map<String, Object> map) {
         if (field) {
             String statusCode = String.valueOf(intValue);
             map.put(key, statusCode);
         }
     }
 
-    void add(String fieldName, boolean field, String value, Map<String, Object> map) {
-        if (field) {
-            if(value != null){
-                map.put(fieldName, value);
-            }
+    protected void add(String fieldName, boolean field, String value, Map<String, Object> map) {
+        if (field && value != null) {
+            map.put(fieldName, value);
         }
     }
 

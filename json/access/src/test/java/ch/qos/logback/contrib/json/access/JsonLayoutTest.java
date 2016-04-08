@@ -27,8 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static ch.qos.logback.contrib.json.access.JsonLayout.REQUESTTIME_ATTR_NAME;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class JsonLayoutTest {
 
@@ -51,8 +50,8 @@ public class JsonLayoutTest {
         assertTrue(map.size() == 1);
         assertTrue(map.containsKey("key1"));
         assertEquals(map.get("key1"), "value1");
-        assertTrue(!map.containsKey("key2"));
-        assertTrue(!map.containsKey("key3"));
+        assertFalse(map.containsKey("key2"));
+        assertFalse(map.containsKey("key3"));
     }
 
     @Test
@@ -66,7 +65,7 @@ public class JsonLayoutTest {
         assertTrue(map.size() == 2);
         assertTrue(map.containsKey("key1"));
         assertEquals(map.get("key1"), "1");
-        assertTrue(!map.containsKey("key2"));
+        assertFalse(map.containsKey("key2"));
         assertTrue(map.containsKey("key3"));
         assertEquals(map.get("key3"), "-1");
     }
@@ -82,7 +81,7 @@ public class JsonLayoutTest {
 
         assertTrue(map.size() == 2);
         assertTrue(map.containsKey("key1"));
-        assertTrue(!map.containsKey("key2"));
+        assertFalse(map.containsKey("key2"));
         assertTrue(map.containsKey("key3"));
         assertEquals("-1", map.get("key3"));
     }
@@ -121,10 +120,10 @@ public class JsonLayoutTest {
         jsonLayout.addMap("key4", false, mapWithArrayValue, map);
 
         assertTrue(map.size() == 2);
-        assertTrue(!map.containsKey("key1"));
+        assertFalse(map.containsKey("key1"));
         assertEquals(mapWithData, map.get("key2"));
         assertEquals(mapWithArrayValue, map.get("key3"));
-        assertTrue(!map.containsKey("key4"));
+        assertFalse(map.containsKey("key4"));
     }
 
 
