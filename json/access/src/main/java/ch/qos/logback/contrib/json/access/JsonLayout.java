@@ -201,132 +201,70 @@ public class JsonLayout extends JsonLayoutBase<IAccessEvent> {
     protected Map toJsonMap(IAccessEvent event) {
         Map<String, Object> map = new LinkedHashMap<String, Object>();
 
-        if (this.includeTimestamp) {
-            long timestamp = event.getTimeStamp();
-            String formatted = formatTimestamp(timestamp);
-            if (formatted != null) {
-                map.put(TIMESTAMP_ATTR_NAME, formatted);
+        addTimestamp(TIMESTAMP_ATTR_NAME, this.includeTimestamp, event.getTimeStamp(), map);
+        add(REMOTEADDR_ATTR_NAME, this.includeRemoteAddr, event.getRemoteAddr(), map);
+        add(REMOTEUSER_ATTR_NAME, this.includeRemoteUser, event.getRemoteUser(), map);
+        addRequestTime(event.getElapsedTime(), map);
+        addInt(STATUSCODE_ATTR_NAME, this.includeStatusCode, event.getStatusCode(), map);
+        add(METHOD_ATTR_NAME, this.includeMethod, event.getMethod(), map);
+        add(REQUESTURI_ATTR_NAME, this.includeRequestURI, event.getRequestURI(), map);
+        add(PROTOCOL_ATTR_NAME, this.includeProtocol, event.getProtocol(), map);
+        add(CONTENTLENGTH_ATTR_NAME, this.includeContentLength, Long.toString(event.getContentLength()), map);
+        add(REQUESTURL_ATTR_NAME, this.includeRequestURL, event.getRequestURL(), map);
+        add(REMOTEHOST_ATTR_NAME, this.includeRemoteHost, event.getRemoteHost(), map);
+        add(SERVERNAME_ATTR_NAME, this.includeServerName, event.getServerName(), map);
+        addMap(REQUESTHEADER_ATTR_NAME, this.includeRequestHeader, event.getRequestHeaderMap(), map);
+        addMap(REQUESTPARAMETER_ATTR_NAME, this.includeRequestParameter, event.getRequestParameterMap(), map);
+        addInt(LOCALPORT_ATTR_NAME, this.includeLocalPort, event.getLocalPort(), map);
+        add(REQUESTCONTENT_ATTR_NAME, this.includeRequestContent,  event.getRequestContent(), map);
+        add(RESPONSECONTENT_ATTR_NAME, this.includeResponseContent,  event.getResponseContent(), map);
+
+        return map;
+    }
+
+    void addMap(String key, boolean field, Map<String, ?> mapValue, Map<String, Object> map) {
+        if (field) {
+            if ((mapValue != null) && !mapValue.isEmpty()) {
+                map.put(key, mapValue);
             }
         }
+    }
 
-        if (this.includeRemoteAddr) {
-            String remoteAddr = event.getRemoteAddr();
-            if (remoteAddr == null) {
-                remoteAddr = event.getRemoteAddr();
-            }
-
-
-            if (remoteAddr != null) {
-                map.put(REMOTEADDR_ATTR_NAME, remoteAddr);
-            }
-        }
-
-        if (this.includeRemoteUser) {
-            String remoteUser = event.getRemoteUser();
-            if (remoteUser != null) {
-                map.put(REMOTEUSER_ATTR_NAME, remoteUser);
-            }
-        }
-
+    void addRequestTime(long requestTime, Map<String, Object> map) {
         if (this.includeRequestTime) {
-            long elapsedTime = event.getElapsedTime();
-            if (elapsedTime > 0) {
-                final long sec = TimeUnit.MILLISECONDS.toSeconds(event.getElapsedTime());
-                final long ms = TimeUnit.MILLISECONDS.toMillis(event.getElapsedTime() - TimeUnit.SECONDS.toMillis(sec));
+            if (requestTime > 0) {
+                final long sec = TimeUnit.MILLISECONDS.toSeconds(requestTime);
+                final long ms = TimeUnit.MILLISECONDS.toMillis(requestTime - TimeUnit.SECONDS.toMillis(sec));
                 String time = String.format("%01d.%03d", sec, ms);
                 if (time != null) {
                     map.put(REQUESTTIME_ATTR_NAME, time);
                 }
             }
         }
+    }
 
-        if (this.includeStatusCode) {
-            String statusCode = String.valueOf(event.getStatusCode());
-            map.put(STATUSCODE_ATTR_NAME, statusCode);
-        }
-
-        if (this.includeMethod) {
-            String method = event.getMethod();
-            if (method != null) {
-                map.put(METHOD_ATTR_NAME, method);
+    void addTimestamp(String key, boolean field, long timeStamp, Map<String, Object> map) {
+        if(field){
+            String formatted = formatTimestamp(timeStamp);
+            if (formatted != null) {
+                map.put(key, formatted);
             }
         }
+    }
 
-        if (this.includeRequestURI) {
-            String requestURI = event.getRequestURI();
-            if (requestURI != null) {
-                map.put(REQUESTURI_ATTR_NAME, requestURI);
+    void addInt(String key, boolean field, int intValue, Map<String, Object> map) {
+        if (field) {
+            String statusCode = String.valueOf(intValue);
+            map.put(key, statusCode);
+        }
+    }
+
+    void add(String fieldName, boolean field, String value, Map<String, Object> map) {
+        if (field) {
+            if(value != null){
+                map.put(fieldName, value);
             }
         }
-
-        if (this.includeProtocol) {
-            String protocol = event.getProtocol();
-            if (protocol != null) {
-                map.put(PROTOCOL_ATTR_NAME, protocol);
-            }
-        }
-
-        if (this.includeContentLength) {
-            String contentLength = Long.toString(event.getContentLength());
-            map.put(CONTENTLENGTH_ATTR_NAME, contentLength);
-        }
-
-        if (this.includeRequestURL) {
-            String requestURL = event.getRequestURL();
-            if (requestURL != null) {
-                map.put(REQUESTURL_ATTR_NAME, requestURL);
-            }
-        }
-
-        if (this.includeRemoteHost) {
-            String remoteHost = event.getRemoteHost();
-            if (remoteHost != null) {
-                map.put(REMOTEHOST_ATTR_NAME, remoteHost);
-            }
-        }
-
-        if (this.includeServerName) {
-            String serverName = event.getServerName();
-            if (serverName != null) {
-                map.put(SERVERNAME_ATTR_NAME, serverName);
-            }
-        }
-
-        if (this.includeRequestHeader) {
-            Map<String, String> requestHeader = event.getRequestHeaderMap();
-            if ((requestHeader != null) && !requestHeader.isEmpty()) {
-                map.put(REQUESTHEADER_ATTR_NAME, requestHeader);
-            }
-        }
-
-        if (this.includeRequestParameter) {
-            Map<String, String[]> requestParameter = event.getRequestParameterMap();
-            if ((requestParameter != null) && !requestParameter.isEmpty()) {
-                map.put(REQUESTPARAMETER_ATTR_NAME, requestParameter);
-            }
-        }
-
-        if (this.includeLocalPort) {
-            String localPort = String.valueOf(event.getLocalPort());
-            map.put(LOCALPORT_ATTR_NAME, localPort);
-        }
-
-        if (this.includeRequestContent) {
-            String requestContent = event.getRequestContent();
-            if (requestContent != null) {
-                map.put(REQUESTCONTENT_ATTR_NAME, requestContent);
-            }
-        }
-
-        if (this.includeResponseContent) {
-            String responseContent = event.getResponseContent();
-            if (responseContent != null) {
-                map.put(RESPONSECONTENT_ATTR_NAME, responseContent);
-            }
-        }
-
-        return map;
-
     }
 
     public boolean isIncludeRemoteAddr() {
