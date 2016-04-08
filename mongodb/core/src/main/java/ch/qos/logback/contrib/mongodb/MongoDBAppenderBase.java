@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014, The logback-contrib developers. All rights reserved.
+ * Copyright (C) 2016, The logback-contrib developers. All rights reserved.
  *
  * This program and the accompanying materials are dual-licensed under
  * either the terms of the Eclipse Public License v1.0 as published by
@@ -39,6 +39,18 @@ public abstract class MongoDBAppenderBase<E> extends UnsynchronizedAppenderBase<
     // see also http://www.mongodb.org/display/DOCS/Connections
     private String uri = null;
 
+    private MongoFactory mongoFactory;
+
+    public MongoDBAppenderBase() {
+        super();
+        this.mongoFactory = new DefaultMongoFactory();
+    }
+
+    public MongoDBAppenderBase(MongoFactory factory) {
+        super();
+        this.mongoFactory = factory;
+    }
+
     /**
      * If appender starts, create a new MongoDB connection and authenticate
      * user. A MongoDB database and collection in {@link #setUri(String)} is
@@ -59,7 +71,7 @@ public abstract class MongoDBAppenderBase<E> extends UnsynchronizedAppenderBase<
                         + " E.g. mongodb://localhost/database.collection");
                 return;
             }
-            mongo = new Mongo(mongoURI);
+            mongo = mongoFactory.createMongo(mongoURI);
             DB db = mongo.getDB(database);
             String username = mongoURI.getUsername();
             char[] password = mongoURI.getPassword();

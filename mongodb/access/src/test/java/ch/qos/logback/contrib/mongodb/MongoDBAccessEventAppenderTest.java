@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2014, The logback-contrib developers. All rights reserved.
+ * Copyright (C) 2016, The logback-contrib developers. All rights reserved.
  *
  * This program and the accompanying materials are dual-licensed under
  * either the terms of the Eclipse Public License v1.0 as published by
@@ -16,16 +16,15 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.Date;
 
-import mockit.Mocked;
-import mockit.NonStrictExpectations;
-import mockit.integration.junit4.JMockit;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.runners.MockitoJUnitRunner;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import ch.qos.logback.access.spi.IAccessEvent;
-import ch.qos.logback.contrib.mongodb.MongoDBAccessEventAppender;
 
 import com.mongodb.BasicDBObject;
 
@@ -36,7 +35,7 @@ import com.mongodb.BasicDBObject;
  * @author Christian Trutz
  * @since 0.1
  */
-@RunWith(JMockit.class)
+@RunWith(MockitoJUnitRunner.class)
 public class MongoDBAccessEventAppenderTest {
 
     // to be tested
@@ -45,12 +44,7 @@ public class MongoDBAccessEventAppenderTest {
     @Test
     public void testTimeStamp() {
         // given
-        new NonStrictExpectations() {
-            {
-                event.getTimeStamp();
-                result = 1000L;
-            }
-        };
+        Mockito.when(event.getTimeStamp()).thenReturn(1000L);
         // when
         final BasicDBObject dbObject = appender.toMongoDocument(event);
         // then
@@ -60,12 +54,7 @@ public class MongoDBAccessEventAppenderTest {
     @Test
     public void testServerName() {
         // given
-        new NonStrictExpectations() {
-            {
-                event.getServerName();
-                result = "servername";
-            }
-        };
+        Mockito.when(event.getServerName()).thenReturn("servername");
         // when
         final BasicDBObject dbObject = appender.toMongoDocument(event);
         // then
@@ -75,16 +64,9 @@ public class MongoDBAccessEventAppenderTest {
     @Test
     public void testRemote() {
         // given
-        new NonStrictExpectations() {
-            {
-                event.getRemoteHost();
-                result = "host";
-                event.getRemoteUser();
-                result = "user";
-                event.getRemoteAddr();
-                result = "addr";
-            }
-        };
+        Mockito.when(event.getRemoteHost()).thenReturn("host");
+        Mockito.when(event.getRemoteUser()).thenReturn("user");
+        Mockito.when(event.getRemoteAddr()).thenReturn("addr");
         // when
         final BasicDBObject dbObject = appender.toMongoDocument(event);
         // then
@@ -97,24 +79,13 @@ public class MongoDBAccessEventAppenderTest {
     @Test
     public void testRequest() {
         // given
-        new NonStrictExpectations() {
-            {
-                event.getRequestURI();
-                result = "uri";
-                event.getProtocol();
-                result = "protocol";
-                event.getMethod();
-                result = "method";
-                event.getRequestContent();
-                result = "postContent";
-                event.getCookie("JSESSIONID");
-                result = "sessionId";
-                event.getRequestHeader("User-Agent");
-                result = "userAgent";
-                event.getRequestHeader("Referer");
-                result = "referer";
-            }
-        };
+        Mockito.when(event.getRequestURI()).thenReturn("uri");
+        Mockito.when(event.getProtocol()).thenReturn("protocol");
+        Mockito.when(event.getMethod()).thenReturn("method");
+        Mockito.when(event.getRequestContent()).thenReturn("postContent");
+        Mockito.when(event.getCookie("JSESSIONID")).thenReturn("sessionId");
+        Mockito.when(event.getRequestHeader("User-Agent")).thenReturn("userAgent");
+        Mockito.when(event.getRequestHeader("Referer")).thenReturn("referer");
         // when
         final BasicDBObject dbObject = appender.toMongoDocument(event);
         // then
@@ -133,7 +104,7 @@ public class MongoDBAccessEventAppenderTest {
     // MOCKING
     //
 
-    @Mocked
+    @Mock
     private IAccessEvent event;
 
     @Before

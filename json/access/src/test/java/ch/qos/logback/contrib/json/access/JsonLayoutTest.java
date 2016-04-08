@@ -21,21 +21,112 @@ import ch.qos.logback.core.joran.spi.JoranException;
 import ch.qos.logback.core.read.ListAppender;
 import org.junit.Test;
 
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static ch.qos.logback.contrib.json.access.JsonLayout.REQUESTTIME_ATTR_NAME;
 import static org.junit.Assert.*;
 
 public class JsonLayoutTest {
 
-    AccessContext context = new AccessContext();
+    private AccessContext context = new AccessContext();
 
-    void configure(String file) throws JoranException {
+    private void configure(String file) throws JoranException {
         JoranConfigurator jc = new JoranConfigurator();
         jc.setContext(context);
         jc.doConfigure(file);
     }
+
+    @Test
+    public void addToJsonMap() throws Exception {
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        JsonLayout jsonLayout = new JsonLayout();
+        jsonLayout.add("key1", true, "value1", map);
+        jsonLayout.add("key2", false, "value2", map);
+        jsonLayout.add("key3", true, null, map);
+
+        assertTrue(map.size() == 1);
+        assertTrue(map.containsKey("key1"));
+        assertEquals(map.get("key1"), "value1");
+        assertTrue(!map.containsKey("key2"));
+        assertTrue(!map.containsKey("key3"));
+    }
+
+    @Test
+    public void addIntToJsonMap() throws Exception {
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        JsonLayout jsonLayout = new JsonLayout();
+        jsonLayout.addInt("key1", true, 1, map);
+        jsonLayout.addInt("key2", false, 1, map);
+        jsonLayout.addInt("key3", true, -1, map);
+
+        assertTrue(map.size() == 2);
+        assertTrue(map.containsKey("key1"));
+        assertEquals(map.get("key1"), "1");
+        assertTrue(!map.containsKey("key2"));
+        assertTrue(map.containsKey("key3"));
+        assertEquals(map.get("key3"), "-1");
+    }
+
+    @Test
+    public void addTimestampToJsonMap() throws Exception {
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        JsonLayout jsonLayout = new JsonLayout();
+        jsonLayout.setTimestampFormat("yyyy-MM-dd HH:mm:ss.SSS");
+        jsonLayout.addTimestamp("key1", true, 1, map);
+        jsonLayout.addTimestamp("key2", false, 1, map);
+        jsonLayout.addTimestamp("key3", true, -1, map);
+
+        assertTrue(map.size() == 2);
+        assertTrue(map.containsKey("key1"));
+        assertEquals("1970-01-01 01:00:00.001", map.get("key1"));
+        assertTrue(!map.containsKey("key2"));
+        assertTrue(map.containsKey("key3"));
+        assertEquals("-1", map.get("key3"));
+    }
+
+    @Test
+    public void addRequestTimeToJsonMap() throws Exception {
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+        JsonLayout jsonLayout = new JsonLayout();
+        jsonLayout.addRequestTime(10001, map);
+
+        assertTrue(map.size() == 1);
+        assertTrue(map.containsKey(REQUESTTIME_ATTR_NAME));
+        assertEquals("10.001", map.get(REQUESTTIME_ATTR_NAME));
+
+        Map<String, Object> map2 = new LinkedHashMap<String, Object>();
+        JsonLayout jsonLayout2 = new JsonLayout();
+        jsonLayout2.addRequestTime(-1, map2);
+
+        assertTrue(map2.size() == 0);
+    }
+
+    @Test
+    public void addMapToJsonMap() throws Exception {
+        Map<String, Object> map = new LinkedHashMap<String, Object>();
+
+        Map<String, String> emptyMap = new HashMap<String, String>();
+        Map<String, String> mapWithData = new HashMap<String, String>();
+        mapWithData.put("mapKey1", "mapValue1");
+        Map<String, String[]> mapWithArrayValue = new HashMap<String, String[]>();
+        mapWithArrayValue.put("mapKey1", new String[]{"mapValue1","mapValue2","mapValue3"});
+
+        JsonLayout jsonLayout = new JsonLayout();
+        jsonLayout.addMap("key1", true, emptyMap, map);
+        jsonLayout.addMap("key2", true, mapWithData, map);
+        jsonLayout.addMap("key3", true, mapWithArrayValue, map);
+        jsonLayout.addMap("key4", false, mapWithArrayValue, map);
+
+        assertTrue(map.size() == 2);
+        assertTrue(!map.containsKey("key1"));
+        assertEquals(mapWithData, map.get("key2"));
+        assertEquals(mapWithArrayValue, map.get("key3"));
+        assertTrue(!map.containsKey("key4"));
+    }
+
 
     @Test
     public void jsonLayout() throws Exception {
