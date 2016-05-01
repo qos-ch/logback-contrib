@@ -99,6 +99,7 @@
         <module>mongodb</module>
         <module>eclipse</module>
         <module>janino-fragment</module>
+        <module>xmpp</module>
     </modules>
 
     <properties>
