@@ -14,11 +14,7 @@ package ch.qos.logback.contrib.mongodb;
 
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.Mongo;
-import com.mongodb.MongoURI;
+import com.mongodb.*;
 
 /**
  * An abstract appender handling connection to MongoDB. Subclasses should
@@ -31,7 +27,7 @@ import com.mongodb.MongoURI;
 public abstract class MongoDBAppenderBase<E> extends UnsynchronizedAppenderBase<E> {
 
     // MongoDB instance
-    private Mongo mongo = null;
+    private MongoClient mongoClient = null;
 
     // MongoDB collection containing logging events
     private DBCollection eventsCollection = null;
@@ -39,16 +35,16 @@ public abstract class MongoDBAppenderBase<E> extends UnsynchronizedAppenderBase<
     // see also http://www.mongodb.org/display/DOCS/Connections
     private String uri = null;
 
-    private MongoFactory mongoFactory;
+    private MongoClientFactory mongoClientFactory;
 
     public MongoDBAppenderBase() {
         super();
-        this.mongoFactory = new DefaultMongoFactory();
+        this.mongoClientFactory = new DefaultMongoClientFactory();
     }
 
-    public MongoDBAppenderBase(MongoFactory factory) {
+    public MongoDBAppenderBase(MongoClientFactory factory) {
         super();
-        this.mongoFactory = factory;
+        this.mongoClientFactory = factory;
     }
 
     /**
@@ -63,7 +59,7 @@ public abstract class MongoDBAppenderBase<E> extends UnsynchronizedAppenderBase<
                 addError("Please set a non-null MongoDB URI.");
                 return;
             }
-            MongoURI mongoURI = new MongoURI(uri);
+            MongoClientURI mongoURI = new MongoClientURI(uri);
             String database = mongoURI.getDatabase();
             String collection = mongoURI.getCollection();
             if (database == null || collection == null) {
@@ -71,12 +67,9 @@ public abstract class MongoDBAppenderBase<E> extends UnsynchronizedAppenderBase<
                         + " E.g. mongodb://localhost/database.collection");
                 return;
             }
-            mongo = mongoFactory.createMongo(mongoURI);
-            DB db = mongo.getDB(database);
-            String username = mongoURI.getUsername();
-            char[] password = mongoURI.getPassword();
-            if (username != null && password != null)
-                db.authenticate(username, password);
+            mongoClient = mongoClientFactory.createMongoClient(mongoURI);
+
+            DB db = this.mongoClient.getDB(database);
             eventsCollection = db.getCollection(collection);
             super.start();
         } catch (Exception exception) {
@@ -111,8 +104,8 @@ public abstract class MongoDBAppenderBase<E> extends UnsynchronizedAppenderBase<
      */
     @Override
     public void stop() {
-        if (mongo != null)
-            mongo.close();
+        if (mongoClient != null)
+            mongoClient.close();
         super.stop();
     }
 
