@@ -140,7 +140,6 @@ public class JsonLayoutTest {
         try {
             long timestamp = Long.parseLong(timestampValue);
             new Date(timestamp);
-            assertTrue(true);
         } catch (NumberFormatException e) {
             fail(String.format("Value of attribute %s could not be converted to a valid Date", JsonLayout.TIMESTAMP_ATTR_NAME));
         }
