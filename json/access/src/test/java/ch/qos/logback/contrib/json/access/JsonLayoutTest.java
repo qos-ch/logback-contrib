@@ -29,6 +29,11 @@ import java.util.Map;
 import static ch.qos.logback.contrib.json.access.JsonLayout.REQUESTTIME_ATTR_NAME;
 import static org.junit.Assert.*;
 
+/**
+ * Tests the {@link JsonLayout} class
+ *
+ * @author Espen A. Fossen
+ */
 public class JsonLayoutTest {
 
     private AccessContext context = new AccessContext();

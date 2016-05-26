@@ -24,6 +24,7 @@ import java.util.TimeZone;
 /**
  * @author Les Hazlewood
  * @author Pierre Queinnec
+ * @author Espen A. Fossen
  * @since 0.1
  */
 public abstract class JsonLayoutBase<E> extends LayoutBase<E> {
@@ -80,6 +81,27 @@ public abstract class JsonLayoutBase<E> extends LayoutBase<E> {
         }
 
         return format(date, format);
+    }
+
+    public void addMap(String key, boolean field, Map<String, ?> mapValue, Map<String, Object> map) {
+        if (field && mapValue != null && !mapValue.isEmpty()) {
+            map.put(key, mapValue);
+        }
+    }
+
+    public void addTimestamp(String key, boolean field, long timeStamp, Map<String, Object> map) {
+        if(field){
+            String formatted = formatTimestamp(timeStamp);
+            if (formatted != null) {
+                map.put(key, formatted);
+            }
+        }
+    }
+
+    public void add(String fieldName, boolean field, String value, Map<String, Object> map) {
+        if (field && value != null) {
+            map.put(fieldName, value);
+        }
     }
 
     protected DateFormat createDateFormat(String timestampFormat) {

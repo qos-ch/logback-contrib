@@ -16,7 +16,7 @@
 
     <appender name="STR_LIST" class="ch.qos.logback.core.read.ListAppender">
         <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
-            <layout class="ch.qos.logback.contrib.json.access.JsonLayout">
+            <layout class="ch.qos.logback.contrib.json.classic.JsonLayout">
                 <jsonFormatter class="ch.qos.logback.contrib.jackson.JacksonJsonFormatter"/>
             </layout>
         </encoder>
