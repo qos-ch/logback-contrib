@@ -29,6 +29,7 @@ import java.util.Map;
 import static ch.qos.logback.contrib.json.access.JsonLayout.REQUESTTIME_ATTR_NAME;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
+import static org.junit.matchers.JUnitMatchers.containsString;
 
 /**
  * Tests the {@link JsonLayout} class
@@ -148,19 +149,19 @@ public class JsonLayoutTest {
         jsonLayout.setContext(context);
         String log = jsonLayout.doLayout(iAccessEvent);
 
-        assertThat(log.contains(String.format("%s=%s", JsonLayout.REMOTEHOST_ATTR_NAME, event.getRemoteHost())), is(true));
-        assertThat(log.contains(String.format("%s=%s", JsonLayout.REMOTEUSER_ATTR_NAME, event.getRemoteUser())), is(true));
-        assertThat(log.contains(String.format("%s=%s", JsonLayout.REMOTEADDR_ATTR_NAME, event.getRemoteAddr())), is(true));
-        assertThat(log.contains(String.format("%s=%s", JsonLayout.METHOD_ATTR_NAME, event.getMethod())), is(true));
+        assertThat(log, containsString(String.format("%s=%s", JsonLayout.REMOTEHOST_ATTR_NAME, event.getRemoteHost())));
+        assertThat(log, containsString(String.format("%s=%s", JsonLayout.REMOTEUSER_ATTR_NAME, event.getRemoteUser())));
+        assertThat(log, containsString(String.format("%s=%s", JsonLayout.REMOTEADDR_ATTR_NAME, event.getRemoteAddr())));
+        assertThat(log, containsString(String.format("%s=%s", JsonLayout.METHOD_ATTR_NAME, event.getMethod())));
         if (event.getRequestHeaderMap().size() == 2) {
             Iterator<Map.Entry<String, String>> iterator = event.getRequestHeaderMap().entrySet().iterator();
             Map.Entry<String, String> firstInMap = iterator.next();
             Map.Entry<String, String> secondInMap = iterator.next();
-            assertThat(log.contains(String.format("%s={%s=%s, %s=%s}", JsonLayout.REQUESTHEADER_ATTR_NAME, firstInMap.getKey(), firstInMap.getValue(), secondInMap.getKey(), secondInMap.getValue())), is(true));
+            assertThat(log, containsString(String.format("%s={%s=%s, %s=%s}", JsonLayout.REQUESTHEADER_ATTR_NAME, firstInMap.getKey(), firstInMap.getValue(), secondInMap.getKey(), secondInMap.getValue())));
         }
-        assertThat(log.contains(String.format("%s=%s", JsonLayout.PROTOCOL_ATTR_NAME, event.getProtocol())), is(true));
-        assertThat(log.contains(String.format("%s=%s", JsonLayout.SERVERNAME_ATTR_NAME, event.getServerName())), is(true));
-        assertThat(log.contains(String.format("%s=%s", JsonLayout.STATUSCODE_ATTR_NAME, event.getStatusCode())), is(true));
+        assertThat(log, containsString(String.format("%s=%s", JsonLayout.PROTOCOL_ATTR_NAME, event.getProtocol())));
+        assertThat(log, containsString(String.format("%s=%s", JsonLayout.SERVERNAME_ATTR_NAME, event.getServerName())));
+        assertThat(log, containsString(String.format("%s=%s", JsonLayout.STATUSCODE_ATTR_NAME, event.getStatusCode())));
     }
 
     @Test
@@ -182,10 +183,10 @@ public class JsonLayoutTest {
         jsonLayout.includeResponseContent = true;
         String log = jsonLayout.doLayout(iAccessEvent);
 
-        assertThat(log.contains(String.format("%s=%s", JsonLayout.CONTENTLENGTH_ATTR_NAME, event.getContentLength())), is(true));
-        assertThat(log.contains(String.format("%s=%s", JsonLayout.REQUESTURL_ATTR_NAME, event.getMethod())), is(true));
-        assertThat(log.contains(String.format("%s=%s", JsonLayout.LOCALPORT_ATTR_NAME, event.getLocalPort())), is(true));
-        assertThat(log.contains(String.format("%s=%s", JsonLayout.RESPONSECONTENT_ATTR_NAME, event.getResponseContent())), is(true));
-        assertThat(log.contains(String.format("%s=%s", JsonLayout.REQUESTCONTENT_ATTR_NAME, event.getRequestContent())), is(true));
+        assertThat(log, containsString(String.format("%s=%s", JsonLayout.CONTENTLENGTH_ATTR_NAME, event.getContentLength())));
+        assertThat(log, containsString(String.format("%s=%s", JsonLayout.REQUESTURL_ATTR_NAME, event.getMethod())));
+        assertThat(log, containsString(String.format("%s=%s", JsonLayout.LOCALPORT_ATTR_NAME, event.getLocalPort())));
+        assertThat(log, containsString(String.format("%s=%s", JsonLayout.RESPONSECONTENT_ATTR_NAME, event.getResponseContent())));
+        assertThat(log, containsString(String.format("%s=%s", JsonLayout.REQUESTCONTENT_ATTR_NAME, event.getRequestContent())));
     }
 }

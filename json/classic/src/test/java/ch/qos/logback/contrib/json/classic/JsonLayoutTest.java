@@ -25,6 +25,7 @@ import java.util.*;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
+import static org.junit.matchers.JUnitMatchers.containsString;
 
 /**
  * Tests the {@link JsonLayout} class
@@ -112,10 +113,10 @@ public class JsonLayoutTest {
         String log = jsonLayout.doLayout(event);
 
         assertTimestamp(log);
-        assertThat(log.contains(String.format("%s=%s", JsonLayout.LEVEL_ATTR_NAME, Level.INFO)), is(true));
-        assertThat(log.contains(String.format("%s=%s", JsonLayout.THREAD_ATTR_NAME, "main")), is(true));
-        assertThat(log.contains(String.format("%s=%s", JsonLayout.LOGGER_ATTR_NAME, loggerName)), is(true));
-        assertThat(log.contains(String.format("%s=%s", JsonLayout.FORMATTED_MESSAGE_ATTR_NAME, message)), is(true));
+        assertThat(log, containsString(String.format("%s=%s", JsonLayout.LEVEL_ATTR_NAME, Level.INFO)));
+        assertThat(log, containsString(String.format("%s=%s", JsonLayout.THREAD_ATTR_NAME, "main")));
+        assertThat(log, containsString(String.format("%s=%s", JsonLayout.LOGGER_ATTR_NAME, loggerName)));
+        assertThat(log, containsString(String.format("%s=%s", JsonLayout.FORMATTED_MESSAGE_ATTR_NAME, message)));
 
         jsonLayout.setIncludeContextName(true);
         jsonLayout.setIncludeMDC(true);
@@ -128,11 +129,11 @@ public class JsonLayoutTest {
         String logWithException = jsonLayout.doLayout(eventWithException);
 
         assertTimestamp(logWithException);
-        assertThat(logWithException.contains(String.format("%s=%s", JsonLayout.LEVEL_ATTR_NAME, Level.DEBUG)), is(true));
-        assertThat(logWithException.contains(String.format("%s=%s", JsonLayout.LOGGER_ATTR_NAME, loggerName)), is(true));
-        assertThat(logWithException.contains(String.format("%s=%s", JsonLayout.FORMATTED_MESSAGE_ATTR_NAME, debugMessage)), is(true));
-        assertThat(logWithException.contains(String.format("%s=%s", JsonLayout.MESSAGE_ATTR_NAME, debugMessage)), is(true));
-        assertThat(logWithException.contains(String.format("%s=%s", JsonLayout.EXCEPTION_ATTR_NAME, exception.toString())), is(true));
+        assertThat(logWithException, containsString(String.format("%s=%s", JsonLayout.LEVEL_ATTR_NAME, Level.DEBUG)));
+        assertThat(logWithException, containsString(String.format("%s=%s", JsonLayout.LOGGER_ATTR_NAME, loggerName)));
+        assertThat(logWithException, containsString(String.format("%s=%s", JsonLayout.FORMATTED_MESSAGE_ATTR_NAME, debugMessage)));
+        assertThat(logWithException, containsString(String.format("%s=%s", JsonLayout.MESSAGE_ATTR_NAME, debugMessage)));
+        assertThat(logWithException, containsString(String.format("%s=%s", JsonLayout.EXCEPTION_ATTR_NAME, exception.toString())));
     }
 
     private void assertTimestamp(String log) {
