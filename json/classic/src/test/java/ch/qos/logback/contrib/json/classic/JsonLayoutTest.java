@@ -23,6 +23,7 @@ import org.junit.Test;
 
 import java.util.*;
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
 /**
@@ -48,11 +49,11 @@ public class JsonLayoutTest {
         jsonLayout.add("key2", false, "value2", map);
         jsonLayout.add("key3", true, null, map);
 
-        assertTrue(map.size() == 1);
-        assertTrue(map.containsKey("key1"));
+        assertThat(map.size(), is(1));
+        assertThat(map.containsKey("key1"), is(true));
         assertEquals(map.get("key1"), "value1");
-        assertFalse(map.containsKey("key2"));
-        assertFalse(map.containsKey("key3"));
+        assertThat(map.containsKey("key2"), is(false));
+        assertThat(map.containsKey("key3"), is(false));
     }
 
     @Test
@@ -64,10 +65,10 @@ public class JsonLayoutTest {
         jsonLayout.addTimestamp("key2", false, 1, map);
         jsonLayout.addTimestamp("key3", true, -1, map);
 
-        assertTrue(map.size() == 2);
-        assertTrue(map.containsKey("key1"));
-        assertFalse(map.containsKey("key2"));
-        assertTrue(map.containsKey("key3"));
+        assertThat(map.size(), is(2));
+        assertThat(map.containsKey("key1"), is(true));
+        assertThat(map.containsKey("key2"), is(false));
+        assertThat(map.containsKey("key3"), is(true));
         assertEquals("-1", map.get("key3"));
     }
 
@@ -87,11 +88,11 @@ public class JsonLayoutTest {
         jsonLayout.addMap("key3", true, mapWithArrayValue, map);
         jsonLayout.addMap("key4", false, mapWithArrayValue, map);
 
-        assertTrue(map.size() == 2);
-        assertFalse(map.containsKey("key1"));
+        assertThat(map.size(), is(2));
+        assertThat(map.containsKey("key1"), is(false));
         assertEquals(mapWithData, map.get("key2"));
         assertEquals(mapWithArrayValue, map.get("key3"));
-        assertFalse(map.containsKey("key4"));
+        assertThat(map.containsKey("key4"), is(false));
     }
 
     @Test
@@ -110,10 +111,10 @@ public class JsonLayoutTest {
         String log = jsonLayout.doLayout(event);
 
         assertTimestamp(log);
-        assertTrue(log.contains(String.format("%s=%s", JsonLayout.LEVEL_ATTR_NAME, Level.INFO)));
-        assertTrue(log.contains(String.format("%s=%s", JsonLayout.THREAD_ATTR_NAME, "main")));
-        assertTrue(log.contains(String.format("%s=%s", JsonLayout.LOGGER_ATTR_NAME, loggerName)));
-        assertTrue(log.contains(String.format("%s=%s", JsonLayout.FORMATTED_MESSAGE_ATTR_NAME, message)));
+        assertThat(log.contains(String.format("%s=%s", JsonLayout.LEVEL_ATTR_NAME, Level.INFO)), is(true));
+        assertThat(log.contains(String.format("%s=%s", JsonLayout.THREAD_ATTR_NAME, "main")), is(true));
+        assertThat(log.contains(String.format("%s=%s", JsonLayout.LOGGER_ATTR_NAME, loggerName)), is(true));
+        assertThat(log.contains(String.format("%s=%s", JsonLayout.FORMATTED_MESSAGE_ATTR_NAME, message)), is(true));
 
         jsonLayout.setIncludeContextName(true);
         jsonLayout.setIncludeMDC(true);
@@ -126,11 +127,11 @@ public class JsonLayoutTest {
         String logWithException = jsonLayout.doLayout(eventWithException);
 
         assertTimestamp(logWithException);
-        assertTrue(logWithException.contains(String.format("%s=%s", JsonLayout.LEVEL_ATTR_NAME, Level.DEBUG)));
-        assertTrue(logWithException.contains(String.format("%s=%s", JsonLayout.LOGGER_ATTR_NAME, loggerName)));
-        assertTrue(logWithException.contains(String.format("%s=%s", JsonLayout.FORMATTED_MESSAGE_ATTR_NAME, debugMessage)));
-        assertTrue(logWithException.contains(String.format("%s=%s", JsonLayout.MESSAGE_ATTR_NAME, debugMessage)));
-        assertTrue(logWithException.contains(String.format("%s=%s", JsonLayout.EXCEPTION_ATTR_NAME, exception.toString())));
+        assertThat(logWithException.contains(String.format("%s=%s", JsonLayout.LEVEL_ATTR_NAME, Level.DEBUG)), is(true));
+        assertThat(logWithException.contains(String.format("%s=%s", JsonLayout.LOGGER_ATTR_NAME, loggerName)), is(true));
+        assertThat(logWithException.contains(String.format("%s=%s", JsonLayout.FORMATTED_MESSAGE_ATTR_NAME, debugMessage)), is(true));
+        assertThat(logWithException.contains(String.format("%s=%s", JsonLayout.MESSAGE_ATTR_NAME, debugMessage)), is(true));
+        assertThat(logWithException.contains(String.format("%s=%s", JsonLayout.EXCEPTION_ATTR_NAME, exception.toString())), is(true));
     }
 
     private void assertTimestamp(String log) {

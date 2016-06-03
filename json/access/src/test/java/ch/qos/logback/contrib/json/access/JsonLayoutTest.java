@@ -27,6 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static ch.qos.logback.contrib.json.access.JsonLayout.REQUESTTIME_ATTR_NAME;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
 /**
@@ -52,11 +53,11 @@ public class JsonLayoutTest {
         jsonLayout.add("key2", false, "value2", map);
         jsonLayout.add("key3", true, null, map);
 
-        assertTrue(map.size() == 1);
-        assertTrue(map.containsKey("key1"));
+        assertThat(map.size(), is(1));
+        assertThat(map.containsKey("key1"), is(true));
         assertEquals(map.get("key1"), "value1");
-        assertFalse(map.containsKey("key2"));
-        assertFalse(map.containsKey("key3"));
+        assertThat(map.containsKey("key2"), is(false));
+        assertThat(map.containsKey("key3"), is(false));
     }
 
     @Test
@@ -67,11 +68,11 @@ public class JsonLayoutTest {
         jsonLayout.addInt("key2", false, 1, map);
         jsonLayout.addInt("key3", true, -1, map);
 
-        assertTrue(map.size() == 2);
-        assertTrue(map.containsKey("key1"));
+        assertThat(map.size(), is(2));
+        assertThat(map.containsKey("key1"), is(true));
         assertEquals(map.get("key1"), "1");
-        assertFalse(map.containsKey("key2"));
-        assertTrue(map.containsKey("key3"));
+        assertThat(map.containsKey("key2"), is(false));
+        assertThat(map.containsKey("key3"), is(true));
         assertEquals(map.get("key3"), "-1");
     }
 
@@ -84,10 +85,10 @@ public class JsonLayoutTest {
         jsonLayout.addTimestamp("key2", false, 1, map);
         jsonLayout.addTimestamp("key3", true, -1, map);
 
-        assertTrue(map.size() == 2);
-        assertTrue(map.containsKey("key1"));
-        assertFalse(map.containsKey("key2"));
-        assertTrue(map.containsKey("key3"));
+        assertThat(map.size(), is(2));
+        assertThat(map.containsKey("key1"), is(true));
+        assertThat(map.containsKey("key2"), is(false));
+        assertThat(map.containsKey("key3"), is(true));
         assertEquals("-1", map.get("key3"));
     }
 
@@ -97,15 +98,15 @@ public class JsonLayoutTest {
         JsonLayout jsonLayout = new JsonLayout();
         jsonLayout.addRequestTime(10001, map);
 
-        assertTrue(map.size() == 1);
-        assertTrue(map.containsKey(REQUESTTIME_ATTR_NAME));
+        assertThat(map.size(), is(1));
+        assertThat(map.containsKey(REQUESTTIME_ATTR_NAME), is(true));
         assertEquals("10.001", map.get(REQUESTTIME_ATTR_NAME));
 
         Map<String, Object> map2 = new LinkedHashMap<String, Object>();
         JsonLayout jsonLayout2 = new JsonLayout();
         jsonLayout2.addRequestTime(-1, map2);
 
-        assertTrue(map2.size() == 0);
+        assertThat(map2.size(), is(0));
     }
 
     @Test
@@ -116,7 +117,7 @@ public class JsonLayoutTest {
         Map<String, String> mapWithData = new HashMap<String, String>();
         mapWithData.put("mapKey1", "mapValue1");
         Map<String, String[]> mapWithArrayValue = new HashMap<String, String[]>();
-        mapWithArrayValue.put("mapKey1", new String[]{"mapValue1","mapValue2","mapValue3"});
+        mapWithArrayValue.put("mapKey1", new String[]{"mapValue1", "mapValue2", "mapValue3"});
 
         JsonLayout jsonLayout = new JsonLayout();
         jsonLayout.addMap("key1", true, emptyMap, map);
@@ -124,11 +125,11 @@ public class JsonLayoutTest {
         jsonLayout.addMap("key3", true, mapWithArrayValue, map);
         jsonLayout.addMap("key4", false, mapWithArrayValue, map);
 
-        assertTrue(map.size() == 2);
-        assertFalse(map.containsKey("key1"));
+        assertThat(map.size(), is(2));
+        assertThat(map.containsKey("key1"), is(false));
         assertEquals(mapWithData, map.get("key2"));
         assertEquals(mapWithArrayValue, map.get("key3"));
-        assertFalse(map.containsKey("key4"));
+        assertThat(map.containsKey("key4"), is(false));
     }
 
 
@@ -146,19 +147,19 @@ public class JsonLayoutTest {
         jsonLayout.setContext(context);
         String log = jsonLayout.doLayout(iAccessEvent);
 
-        assertTrue(log.contains(String.format("%s=%s", JsonLayout.REMOTEHOST_ATTR_NAME, event.getRemoteHost())));
-        assertTrue(log.contains(String.format("%s=%s", JsonLayout.REMOTEUSER_ATTR_NAME, event.getRemoteUser())));
-        assertTrue(log.contains(String.format("%s=%s", JsonLayout.REMOTEADDR_ATTR_NAME, event.getRemoteAddr())));
-        assertTrue(log.contains(String.format("%s=%s", JsonLayout.METHOD_ATTR_NAME, event.getMethod())));
-        if(event.getRequestHeaderMap().size() == 2){
+        assertThat(log.contains(String.format("%s=%s", JsonLayout.REMOTEHOST_ATTR_NAME, event.getRemoteHost())), is(true));
+        assertThat(log.contains(String.format("%s=%s", JsonLayout.REMOTEUSER_ATTR_NAME, event.getRemoteUser())), is(true));
+        assertThat(log.contains(String.format("%s=%s", JsonLayout.REMOTEADDR_ATTR_NAME, event.getRemoteAddr())), is(true));
+        assertThat(log.contains(String.format("%s=%s", JsonLayout.METHOD_ATTR_NAME, event.getMethod())), is(true));
+        if (event.getRequestHeaderMap().size() == 2) {
             Iterator<Map.Entry<String, String>> iterator = event.getRequestHeaderMap().entrySet().iterator();
             Map.Entry<String, String> firstInMap = iterator.next();
             Map.Entry<String, String> secondInMap = iterator.next();
-            assertTrue(log.contains(String.format("%s={%s=%s, %s=%s}", JsonLayout.REQUESTHEADER_ATTR_NAME, firstInMap.getKey(), firstInMap.getValue(), secondInMap.getKey(), secondInMap.getValue())));
+            assertThat(log.contains(String.format("%s={%s=%s, %s=%s}", JsonLayout.REQUESTHEADER_ATTR_NAME, firstInMap.getKey(), firstInMap.getValue(), secondInMap.getKey(), secondInMap.getValue())), is(true));
         }
-        assertTrue(log.contains(String.format("%s=%s", JsonLayout.PROTOCOL_ATTR_NAME, event.getProtocol())));
-        assertTrue(log.contains(String.format("%s=%s", JsonLayout.SERVERNAME_ATTR_NAME, event.getServerName())));
-        assertTrue(log.contains(String.format("%s=%s", JsonLayout.STATUSCODE_ATTR_NAME, event.getStatusCode())));
+        assertThat(log.contains(String.format("%s=%s", JsonLayout.PROTOCOL_ATTR_NAME, event.getProtocol())), is(true));
+        assertThat(log.contains(String.format("%s=%s", JsonLayout.SERVERNAME_ATTR_NAME, event.getServerName())), is(true));
+        assertThat(log.contains(String.format("%s=%s", JsonLayout.STATUSCODE_ATTR_NAME, event.getStatusCode())), is(true));
     }
 
     @Test
@@ -180,10 +181,10 @@ public class JsonLayoutTest {
         jsonLayout.includeResponseContent = true;
         String log = jsonLayout.doLayout(iAccessEvent);
 
-        assertTrue(log.contains(String.format("%s=%s", JsonLayout.CONTENTLENGTH_ATTR_NAME, event.getContentLength())));
-        assertTrue(log.contains(String.format("%s=%s", JsonLayout.REQUESTURL_ATTR_NAME, event.getMethod())));
-        assertTrue(log.contains(String.format("%s=%s", JsonLayout.LOCALPORT_ATTR_NAME, event.getLocalPort())));
-        assertTrue(log.contains(String.format("%s=%s", JsonLayout.RESPONSECONTENT_ATTR_NAME, event.getResponseContent())));
-        assertTrue(log.contains(String.format("%s=%s", JsonLayout.REQUESTCONTENT_ATTR_NAME, event.getRequestContent())));
+        assertThat(log.contains(String.format("%s=%s", JsonLayout.CONTENTLENGTH_ATTR_NAME, event.getContentLength())), is(true));
+        assertThat(log.contains(String.format("%s=%s", JsonLayout.REQUESTURL_ATTR_NAME, event.getMethod())), is(true));
+        assertThat(log.contains(String.format("%s=%s", JsonLayout.LOCALPORT_ATTR_NAME, event.getLocalPort())), is(true));
+        assertThat(log.contains(String.format("%s=%s", JsonLayout.RESPONSECONTENT_ATTR_NAME, event.getResponseContent())), is(true));
+        assertThat(log.contains(String.format("%s=%s", JsonLayout.REQUESTCONTENT_ATTR_NAME, event.getRequestContent())), is(true));
     }
 }
