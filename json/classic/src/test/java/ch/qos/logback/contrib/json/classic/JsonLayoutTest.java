@@ -138,6 +138,10 @@ public class JsonLayoutTest {
 
     private void assertTimestamp(String log) {
         int timestampStart = log.indexOf(JsonLayout.TIMESTAMP_ATTR_NAME) + JsonLayout.TIMESTAMP_ATTR_NAME.length() + 1;
+        if(timestampStart == -1){
+            fail(String.format("No instance of %s found in log, there should be one.", JsonLayout.TIMESTAMP_ATTR_NAME));
+        }
+
         int timestampEnd = log.indexOf(",", timestampStart);
         String timestampValue = log.substring(timestampStart, timestampEnd);
         try {
