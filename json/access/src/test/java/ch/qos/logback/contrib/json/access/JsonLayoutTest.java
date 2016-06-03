@@ -40,6 +40,7 @@ public class JsonLayoutTest {
     private AccessContext context = new AccessContext();
 
     private void configure(String file) throws JoranException {
+        context.reset();
         JoranConfigurator jc = new JoranConfigurator();
         jc.setContext(context);
         jc.doConfigure(file);

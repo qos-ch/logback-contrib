@@ -36,6 +36,7 @@ public class JsonLayoutTest {
     private LoggerContext context = new LoggerContext();
 
     private void configure(String file) throws JoranException {
+        context.reset();
         JoranConfigurator jc = new JoranConfigurator();
         jc.setContext(context);
         jc.doConfigure(file);
