@@ -137,16 +137,16 @@ public class JsonLayoutTest {
     }
 
     private void assertTimestamp(String log) {
-        int timestampStart = log.indexOf(JsonLayout.TIMESTAMP_ATTR_NAME) + JsonLayout.TIMESTAMP_ATTR_NAME.length() + 1;
-        if(timestampStart == -1){
+        int timestamp = log.indexOf(JsonLayout.TIMESTAMP_ATTR_NAME);
+        if(timestamp == -1){
             fail(String.format("No instance of %s found in log, there should be one.", JsonLayout.TIMESTAMP_ATTR_NAME));
         }
 
+        int timestampStart = timestamp + JsonLayout.TIMESTAMP_ATTR_NAME.length() + 1;
         int timestampEnd = log.indexOf(",", timestampStart);
         String timestampValue = log.substring(timestampStart, timestampEnd);
         try {
-            long timestamp = Long.parseLong(timestampValue);
-            new Date(timestamp);
+            new Date(Long.parseLong(timestampValue));
         } catch (NumberFormatException e) {
             fail(String.format("Value of attribute %s could not be converted to a valid Date", JsonLayout.TIMESTAMP_ATTR_NAME));
         }
