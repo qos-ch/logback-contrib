@@ -22,5 +22,7 @@
         </encoder>
     </appender>
 
-    <appender-ref ref="STR_LIST"/>
+    <root>
+        <appender-ref ref="STR_LIST"/>
+    </root>
 </configuration>

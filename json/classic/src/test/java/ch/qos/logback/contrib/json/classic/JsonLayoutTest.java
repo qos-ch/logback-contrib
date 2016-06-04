@@ -20,6 +20,7 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.joran.spi.JoranException;
 import org.junit.Test;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -100,12 +101,11 @@ public class JsonLayoutTest {
     @Test
     public void jsonLayout() throws Exception {
         configure("src/test/input/json/jsonLayout.xml");
-        String loggerName = "STR_LIST";
+        String loggerName = "ROOT";
         String message = "Info message";
         String debugMessage = "Debug message";
-        Logger logger = context.getLogger(loggerName);
+        Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
         logger.info("Test");
-
         ILoggingEvent event = new LoggingEvent("my.class.name", logger, Level.INFO, message, null, null);
 
         JsonLayout jsonLayout = new JsonLayout();
