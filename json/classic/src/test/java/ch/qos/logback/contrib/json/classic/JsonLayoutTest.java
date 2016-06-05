@@ -24,6 +24,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
+import static org.hamcrest.Matchers.hasKey;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static org.junit.matchers.JUnitMatchers.containsString;
@@ -53,10 +55,10 @@ public class JsonLayoutTest {
         jsonLayout.add("key3", true, null, map);
 
         assertThat(map.size(), is(1));
-        assertThat(map.containsKey("key1"), is(true));
+        assertThat(map, hasKey("key1"));
         assertEquals(map.get("key1"), "value1");
-        assertThat(map.containsKey("key2"), is(false));
-        assertThat(map.containsKey("key3"), is(false));
+        assertThat(map, not(hasKey("key2")));
+        assertThat(map, not(hasKey("key3")));
     }
 
     @Test
@@ -69,9 +71,9 @@ public class JsonLayoutTest {
         jsonLayout.addTimestamp("key3", true, -1, map);
 
         assertThat(map.size(), is(2));
-        assertThat(map.containsKey("key1"), is(true));
-        assertThat(map.containsKey("key2"), is(false));
-        assertThat(map.containsKey("key3"), is(true));
+        assertThat(map, hasKey("key1"));
+        assertThat(map, not(hasKey("key2")));
+        assertThat(map, hasKey("key3"));
         assertEquals("-1", map.get("key3"));
     }
 
@@ -92,10 +94,10 @@ public class JsonLayoutTest {
         jsonLayout.addMap("key4", false, mapWithArrayValue, map);
 
         assertThat(map.size(), is(2));
-        assertThat(map.containsKey("key1"), is(false));
+        assertThat(map, not(hasKey("key1")));
         assertEquals(mapWithData, map.get("key2"));
         assertEquals(mapWithArrayValue, map.get("key3"));
-        assertThat(map.containsKey("key4"), is(false));
+        assertThat(map, not(hasKey("key4")));
     }
 
     @Test

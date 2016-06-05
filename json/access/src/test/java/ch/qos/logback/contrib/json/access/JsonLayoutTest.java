@@ -27,6 +27,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static ch.qos.logback.contrib.json.access.JsonLayout.REQUESTTIME_ATTR_NAME;
+import static org.hamcrest.Matchers.hasKey;
+import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 import static org.junit.matchers.JUnitMatchers.containsString;
@@ -56,10 +58,10 @@ public class JsonLayoutTest {
         jsonLayout.add("key3", true, null, map);
 
         assertThat(map.size(), is(1));
-        assertThat(map.containsKey("key1"), is(true));
+        assertThat(map, hasKey("key1"));
         assertEquals(map.get("key1"), "value1");
-        assertThat(map.containsKey("key2"), is(false));
-        assertThat(map.containsKey("key3"), is(false));
+        assertThat(map, not(hasKey("key2")));
+        assertThat(map, not(hasKey("key3")));
     }
 
     @Test
@@ -71,10 +73,10 @@ public class JsonLayoutTest {
         jsonLayout.addInt("key3", true, -1, map);
 
         assertThat(map.size(), is(2));
-        assertThat(map.containsKey("key1"), is(true));
+        assertThat(map, hasKey("key1"));
         assertEquals(map.get("key1"), "1");
-        assertThat(map.containsKey("key2"), is(false));
-        assertThat(map.containsKey("key3"), is(true));
+        assertThat(map, not(hasKey("key2")));
+        assertThat(map, hasKey("key3"));
         assertEquals(map.get("key3"), "-1");
     }
 
@@ -88,9 +90,9 @@ public class JsonLayoutTest {
         jsonLayout.addTimestamp("key3", true, -1, map);
 
         assertThat(map.size(), is(2));
-        assertThat(map.containsKey("key1"), is(true));
-        assertThat(map.containsKey("key2"), is(false));
-        assertThat(map.containsKey("key3"), is(true));
+        assertThat(map, hasKey("key1"));
+        assertThat(map, not(hasKey("key2")));
+        assertThat(map, hasKey("key3"));
         assertEquals("-1", map.get("key3"));
     }
 
@@ -101,7 +103,7 @@ public class JsonLayoutTest {
         jsonLayout.addRequestTime(10001, map);
 
         assertThat(map.size(), is(1));
-        assertThat(map.containsKey(REQUESTTIME_ATTR_NAME), is(true));
+        assertThat(map, hasKey(REQUESTTIME_ATTR_NAME));
         assertEquals("10.001", map.get(REQUESTTIME_ATTR_NAME));
 
         Map<String, Object> map2 = new LinkedHashMap<String, Object>();
