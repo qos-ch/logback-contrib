@@ -130,10 +130,10 @@ public class JsonLayoutTest {
         jsonLayout.addMap("key4", false, mapWithArrayValue, map);
 
         assertThat(map.size(), is(2));
-        assertThat(map.containsKey("key1"), is(false));
+        assertThat(map, not(hasKey("key1")));
         assertEquals(mapWithData, map.get("key2"));
         assertEquals(mapWithArrayValue, map.get("key3"));
-        assertThat(map.containsKey("key4"), is(false));
+        assertThat(map, not(hasKey("key4")));
     }
 
 
