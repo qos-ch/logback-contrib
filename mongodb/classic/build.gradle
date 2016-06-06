@@ -1,0 +1,6 @@
+description = 'Logback Contrib :: MongoDB :: Classic'
+
+dependencies {
+  compile project(':core')
+  compile "ch.qos.logback:logback-classic:${logbackVersion}"
+}

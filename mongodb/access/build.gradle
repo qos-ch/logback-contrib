@@ -1,0 +1,7 @@
+description = 'Logback Contrib :: MongoDB :: Access'
+
+dependencies {
+  compile project(':core')
+  compile "ch.qos.logback:logback-access:${logbackVersion}"
+  compile 'javax.servlet:servlet-api:2.5'
+}
