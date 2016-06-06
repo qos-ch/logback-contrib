@@ -14,6 +14,8 @@ package ch.qos.logback.contrib.mongodb;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+
+import com.mongodb.*;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
@@ -24,12 +26,6 @@ import org.junit.runner.RunWith;
 
 import ch.qos.logback.core.ContextBase;
 import ch.qos.logback.core.spi.DeferredProcessingAware;
-
-import com.mongodb.BasicDBObject;
-import com.mongodb.DB;
-import com.mongodb.DBCollection;
-import com.mongodb.Mongo;
-import com.mongodb.MongoURI;
 
 import java.net.UnknownHostException;
 
@@ -107,7 +103,6 @@ public class MongoDBAppenderBaseTest {
         appender.start();
         // then appender should start
         assertTrue(appender.isStarted());
-        Mockito.verify(db).authenticate("", "password".toCharArray());
     }
 
     // TODO is empty password in MongoDB allowed?
@@ -118,7 +113,6 @@ public class MongoDBAppenderBaseTest {
         appender.start();
         // then appender should start
         assertTrue(appender.isStarted());
-        Mockito.verify(db).authenticate("username", "".toCharArray());
     }
 
     @Test
@@ -128,7 +122,6 @@ public class MongoDBAppenderBaseTest {
         appender.start();
         // then appender should start
         assertTrue(appender.isStarted());
-        Mockito.verify(db).authenticate("username", "password".toCharArray());
     }
 
     @Test
@@ -149,7 +142,7 @@ public class MongoDBAppenderBaseTest {
         appender.doAppend(event);
         appender.stop();
         // then close MongoDB connection and stop appender
-        Mockito.verify(mongo).close();
+        Mockito.verify(mongoClient).close();
         assertFalse(appender.isStarted());
     }
 
@@ -159,7 +152,7 @@ public class MongoDBAppenderBaseTest {
     //
 
     @Mock
-    private Mongo mongo;
+    private MongoClient mongoClient;
     @Mock
     private DB db;
     @Mock
@@ -167,14 +160,14 @@ public class MongoDBAppenderBaseTest {
     @Mock
     private DeferredProcessingAware event;
     @Mock
-    private MongoFactory mongoFactory;
+    private MongoClientFactory mongoFactory;
 
     // this object will be inserted in MongoDB and represents an logging event
     private BasicDBObject dbObject = new BasicDBObject();
 
     @Before
     public void before() throws UnknownHostException {
-        Mockito.when(mongoFactory.createMongo(Mockito.any(MongoURI.class))).thenReturn(mongo);
+        Mockito.when(mongoFactory.createMongoClient(Mockito.any(MongoClientURI.class))).thenReturn(mongoClient);
 
         appender = new MongoDBAppenderBase<DeferredProcessingAware>(mongoFactory) {
             @Override
@@ -184,7 +177,7 @@ public class MongoDBAppenderBaseTest {
         };
         appender.setContext(new ContextBase());
 
-        Mockito.when(mongo.getDB("database")).thenReturn(db);
+        Mockito.when(mongoClient.getDB("database")).thenReturn(db);
         Mockito.when(db.getCollection("collection")).thenReturn(collection);
     }
 }

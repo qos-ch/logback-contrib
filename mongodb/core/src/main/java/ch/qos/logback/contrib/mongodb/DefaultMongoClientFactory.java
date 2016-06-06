@@ -12,24 +12,24 @@
  */
 package ch.qos.logback.contrib.mongodb;
 
-import com.mongodb.Mongo;
-import com.mongodb.MongoURI;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientURI;
 
 import java.net.UnknownHostException;
 
 /**
- * Factory of {@link com.mongodb.Mongo} instances
+ * Factory of {@link com.mongodb.MongoClient} instances
  */
-public class DefaultMongoFactory implements MongoFactory {
+public class DefaultMongoClientFactory implements MongoClientFactory {
 
     /**
      * Creates a {@link com.mongodb.Mongo} instance
      * @param uri - database URI
-     * @return the Mongo instance
+     * @return the MongoClient instance
      * @throws UnknownHostException
      */
     @Override
-    public Mongo createMongo(MongoURI uri) throws UnknownHostException {
-        return new Mongo(uri);
+    public MongoClient createMongoClient(MongoClientURI uri) throws UnknownHostException {
+        return new MongoClient(uri);
     }
 }
