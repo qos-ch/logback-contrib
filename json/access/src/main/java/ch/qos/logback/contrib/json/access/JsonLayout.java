@@ -221,12 +221,6 @@ public class JsonLayout extends JsonLayoutBase<IAccessEvent> {
         return map;
     }
 
-    protected void addMap(String key, boolean field, Map<String, ?> mapValue, Map<String, Object> map) {
-        if (field && mapValue != null && !mapValue.isEmpty()) {
-            map.put(key, mapValue);
-        }
-    }
-
     protected void addRequestTime(long requestTime, Map<String, Object> map) {
         if (this.includeRequestTime && requestTime > 0) {
             final long sec = TimeUnit.MILLISECONDS.toSeconds(requestTime);
@@ -238,25 +232,10 @@ public class JsonLayout extends JsonLayoutBase<IAccessEvent> {
         }
     }
 
-    protected void addTimestamp(String key, boolean field, long timeStamp, Map<String, Object> map) {
-        if(field){
-            String formatted = formatTimestamp(timeStamp);
-            if (formatted != null) {
-                map.put(key, formatted);
-            }
-        }
-    }
-
     protected void addInt(String key, boolean field, int intValue, Map<String, Object> map) {
         if (field) {
             String statusCode = String.valueOf(intValue);
             map.put(key, statusCode);
-        }
-    }
-
-    protected void add(String fieldName, boolean field, String value, Map<String, Object> map) {
-        if (field && value != null) {
-            map.put(fieldName, value);
         }
     }
 

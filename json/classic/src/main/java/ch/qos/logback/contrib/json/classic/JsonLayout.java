@@ -12,7 +12,6 @@
  */
 package ch.qos.logback.contrib.json.classic;
 
-import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.pattern.ThrowableHandlingConverter;
 import ch.qos.logback.classic.pattern.ThrowableProxyConverter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
@@ -98,6 +97,7 @@ import java.util.Map;
  *
  * @author Les Hazlewood
  * @author Pierre Queinnec
+ * @author Espen A. Fossen
  * @since 0.1
  */
 public class JsonLayout extends JsonLayoutBase<ILoggingEvent> {
@@ -152,76 +152,29 @@ public class JsonLayout extends JsonLayoutBase<ILoggingEvent> {
 
         Map<String, Object> map = new LinkedHashMap<String, Object>();
 
-        if (this.includeTimestamp) {
-            long timestamp = event.getTimeStamp();
-            String formatted = formatTimestamp(timestamp);
-            if (formatted != null) {
-                map.put(TIMESTAMP_ATTR_NAME, formatted);
-            }
-        }
+        addTimestamp(TIMESTAMP_ATTR_NAME, this.includeTimestamp, event.getTimeStamp(), map);
+        add(LEVEL_ATTR_NAME, this.includeLevel, String.valueOf(event.getLevel()), map);
+        add(THREAD_ATTR_NAME, this.includeThreadName, event.getThreadName(), map);
+        addMap(MDC_ATTR_NAME, this.includeMDC, event.getMDCPropertyMap(), map);
+        add(LOGGER_ATTR_NAME, this.includeLoggerName, event.getLoggerName(), map);
+        add(FORMATTED_MESSAGE_ATTR_NAME, this.includeFormattedMessage, event.getFormattedMessage(), map);
+        add(MESSAGE_ATTR_NAME, this.includeMessage, event.getMessage(), map);
+        add(CONTEXT_ATTR_NAME, this.includeContextName, event.getLoggerContextVO().getName(), map);
+        addThrowableInfo(EXCEPTION_ATTR_NAME, this.includeException, event, map);
+        addCustomDataToJsonMap(map, event);
+        return map;
+    }
 
-        if (this.includeLevel) {
-            Level level = event.getLevel();
-            if (level != null) {
-                String lvlString = String.valueOf(level);
-                map.put(LEVEL_ATTR_NAME, lvlString);
-            }
-        }
-
-        if (this.includeThreadName) {
-            String threadName = event.getThreadName();
-            if (threadName != null) {
-                map.put(THREAD_ATTR_NAME, threadName);
-            }
-        }
-
-        if (this.includeMDC) {
-            Map<String, String> mdc = event.getMDCPropertyMap();
-            if ((mdc != null) && !mdc.isEmpty()) {
-                map.put(MDC_ATTR_NAME, mdc);
-            }
-        }
-
-        if (this.includeLoggerName) {
-            String loggerName = event.getLoggerName();
-            if (loggerName != null) {
-                map.put(LOGGER_ATTR_NAME, loggerName);
-            }
-        }
-
-        if (this.includeFormattedMessage) {
-            String msg = event.getFormattedMessage();
-            if (msg != null) {
-                map.put(FORMATTED_MESSAGE_ATTR_NAME, msg);
-            }
-        }
-
-        if (this.includeMessage) {
-            String msg = event.getMessage();
-            if (msg != null) {
-                map.put(MESSAGE_ATTR_NAME, msg);
-            }
-        }
-
-        if (this.includeContextName) {
-            String msg = event.getLoggerContextVO().getName();
-            if (msg != null) {
-                map.put(CONTEXT_ATTR_NAME, msg);
-            }
-        }
-
-        if (this.includeException) {
-            IThrowableProxy throwableProxy = event.getThrowableProxy();
+    protected void addThrowableInfo(String fieldName, boolean field, ILoggingEvent value, Map<String, Object> map) {
+        if (field && value != null) {
+            IThrowableProxy throwableProxy = value.getThrowableProxy();
             if (throwableProxy != null) {
-                String ex = throwableProxyConverter.convert(event);
+                String ex = throwableProxyConverter.convert(value);
                 if (ex != null && !ex.equals("")) {
-                    map.put(EXCEPTION_ATTR_NAME, ex);
+                    map.put(fieldName, ex);
                 }
             }
         }
-
-        addCustomDataToJsonMap(map, event);
-        return map;
     }
 
     /**
