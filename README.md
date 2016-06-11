@@ -1,5 +1,5 @@
-# logback-contrib [![Build Status](https://travis-ci.org/qos-ch/logback-contrib.svg?branch=master)](https://travis-ci.org/qos-ch/logback-contrib)
-<sup>v0.1.5</sup>
+# logback-contrib  [![GitHub release](https://img.shields.io/github/release/qos-ch/logback-contrib.svg?maxAge=2592000)]() [![Build Status](https://travis-ci.org/qos-ch/logback-contrib.svg?branch=master)](https://travis-ci.org/qos-ch/logback-contrib)
+
 
 https://github.com/qos-ch/logback-contrib/wiki
 
