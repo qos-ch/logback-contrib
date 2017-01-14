@@ -36,27 +36,27 @@
     </description>
     <inceptionYear>2012</inceptionYear>
 
-   <licenses>
-     <license>
-       <name>Eclipse Public License - v 1.0</name>
-       <url>http://www.eclipse.org/legal/epl-v10.html</url>
-     </license>
+    <licenses>
+        <license>
+            <name>Eclipse Public License - v 1.0</name>
+            <url>http://www.eclipse.org/legal/epl-v10.html</url>
+        </license>
 
-     <license>
-       <name>GNU Lesser General Public License</name>
-       <url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html</url>
-     </license>
+        <license>
+            <name>GNU Lesser General Public License</name>
+            <url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html</url>
+        </license>
     </licenses>
 
     <scm>
-      <connection>scm:git:git://github.com/qos-ch/logback-contrib.git</connection>
-      <developerConnection>scm:git:git@github.com:qos-ch/logback-contrib.git</developerConnection>
-      <url>https://github.com/qos-ch/logback-contrib</url>
-      <tag>HEAD</tag>
-  </scm>
+        <connection>scm:git:git://github.com/qos-ch/logback-contrib.git</connection>
+        <developerConnection>scm:git:git@github.com:qos-ch/logback-contrib.git</developerConnection>
+        <url>https://github.com/qos-ch/logback-contrib</url>
+        <tag>HEAD</tag>
+    </scm>
     <issueManagement>
-      <system>GitHub</system>
-      <url>https://github.com/qos-ch/logback-contrib/issues</url>
+        <system>GitHub</system>
+        <url>https://github.com/qos-ch/logback-contrib/issues</url>
     </issueManagement>
 
     <developers>
@@ -83,10 +83,10 @@
         </developer>
     </developers>
     <contributors>
-    	<contributor>
-    		<name>David J. M. Karlsen</name>
-    		<email>david@davidkarlsen.com</email>
-    	</contributor>
+        <contributor>
+            <name>David J. M. Karlsen</name>
+            <email>david@davidkarlsen.com</email>
+        </contributor>
         <contributor>
             <name>Espen A. Fossen</name>
             <email>espenaf@junta.no</email>
@@ -106,8 +106,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!-- Compile Dependencies: -->
-        <logback.version>1.1.3</logback.version>
-        <jackson.version>2.1.3</jackson.version>
+        <logback.version>1.1.8</logback.version>
+        <jackson.version>2.8.5</jackson.version>
         <mongo-java-driver.version>2.10.1</mongo-java-driver.version>
         <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
 
@@ -146,29 +146,29 @@
         <dependencies>
 
 
-           <!-- Pool of dependencies available to any sub-module, but not included automatically.
-                They must be explicitly referenced in the children POMs, but _don't_ include
-                version numbers in the child POMs.  Define them here only to guarantee version
-                compatibility across children modules! -->
+            <!-- Pool of dependencies available to any sub-module, but not included automatically.
+                 They must be explicitly referenced in the children POMs, but _don't_ include
+                 version numbers in the child POMs.  Define them here only to guarantee version
+                 compatibility across children modules! -->
 
             <!-- Logback Extensions sub-modules dependency .jars (alphabetized based on artifactId for easy scanning please!): -->
-          <dependency>
-               <groupId>ch.qos.logback</groupId>
-               <artifactId>logback-access</artifactId>
-               <version>${logback.version}</version>
-           </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-access</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
 
-          <dependency>
-               <groupId>ch.qos.logback</groupId>
-               <artifactId>logback-classic</artifactId>
-               <version>${logback.version}</version>
-           </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
 
-          <dependency>
-               <groupId>ch.qos.logback</groupId>
-               <artifactId>logback-core</artifactId>
-               <version>${logback.version}</version>
-           </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>${logback.version}</version>
+            </dependency>
 
             <!-- 3rd party dependencies: -->
             <dependency>

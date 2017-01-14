@@ -12,7 +12,6 @@
  */
 package ch.qos.logback.contrib.json.access;
 
-import ch.qos.logback.access.TeztConstants;
 import ch.qos.logback.access.dummy.DummyAccessEventBuilder;
 import ch.qos.logback.access.joran.JoranConfigurator;
 import ch.qos.logback.access.spi.AccessContext;
@@ -26,11 +25,13 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import static ch.qos.logback.access.AccessTestConstants.TEST_DIR_PREFIX;
 import static ch.qos.logback.contrib.json.access.JsonLayout.REQUESTTIME_ATTR_NAME;
 import static org.hamcrest.Matchers.hasKey;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.matchers.JUnitMatchers.containsString;
 
 /**
@@ -139,7 +140,7 @@ public class JsonLayoutTest {
 
     @Test
     public void jsonLayout() throws Exception {
-        configure(TeztConstants.TEST_DIR_PREFIX + "input/json/jsonLayout.xml");
+        configure(TEST_DIR_PREFIX + "input/json/jsonLayout.xml");
         ListAppender<IAccessEvent> listAppender = (ListAppender<IAccessEvent>) context.getAppender("STR_LIST");
         IAccessEvent event = DummyAccessEventBuilder.buildNewAccessEvent();
         listAppender.doAppend(event);
@@ -168,7 +169,7 @@ public class JsonLayoutTest {
 
     @Test
     public void jsonLayoutIncludeDefaultOff() throws Exception {
-        configure(TeztConstants.TEST_DIR_PREFIX + "input/json/jsonLayout.xml");
+        configure(TEST_DIR_PREFIX + "input/json/jsonLayout.xml");
         ListAppender<IAccessEvent> listAppender = (ListAppender<IAccessEvent>) context.getAppender("STR_LIST");
         IAccessEvent event = DummyAccessEventBuilder.buildNewAccessEvent();
         listAppender.doAppend(event);
