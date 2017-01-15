@@ -12,15 +12,7 @@
  */
 package ch.qos.logback.contrib.eclipse;
 
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
-import org.eclipse.core.runtime.ILog;
-import org.eclipse.core.runtime.ILogListener;
-import org.eclipse.core.runtime.IStatus;
-import org.junit.Before;
-import org.junit.Test;
-import org.osgi.framework.*;
-
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -30,7 +22,25 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
+import ch.qos.logback.contrib.eclipse.EclipseLogAppender;
+import ch.qos.logback.contrib.eclipse.IPlatform;
+
 import static org.junit.Assert.*;
+
+import org.junit.Before;
+import org.junit.Test;
+
+import org.eclipse.core.runtime.ILog;
+import org.eclipse.core.runtime.ILogListener;
+import org.eclipse.core.runtime.IStatus;
+
+import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.BundleException;
+import org.osgi.framework.ServiceReference;
+import org.osgi.framework.Version;
 
 /**
  * Tests the {@link EclipseLogAppender} class
