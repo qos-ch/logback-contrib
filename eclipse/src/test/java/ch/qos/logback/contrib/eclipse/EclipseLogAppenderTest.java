@@ -22,6 +22,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 
+import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder;
 import ch.qos.logback.contrib.eclipse.EclipseLogAppender;
 import ch.qos.logback.contrib.eclipse.IPlatform;
@@ -51,16 +52,18 @@ public class EclipseLogAppenderTest {
 
     private EclipseLogAppenderWithMockPlatform appender = null;
     private PatternLayoutEncoder encoder = null;
-    
+
     @Before
     public void before() {
         // create the encoder and start it so that it initializes inner parameters
         // needed by the appender
+        LoggerContext context = new LoggerContext();
         encoder = new PatternLayoutEncoder();
         encoder.setPattern("%msg");
+        encoder.setContext(context);
         encoder.start();
         assertNotNull(encoder.getLayout());
-        
+
         appender = new EclipseLogAppenderWithMockPlatform();
         appender.setEncoder(encoder);
     }
@@ -72,7 +75,7 @@ public class EclipseLogAppenderTest {
         appender.start();
         // then appender should still start because the field is optional
         assertTrue(appender.isStarted());
-        
+
         // verify valid default bundle name
         assertNotNull(appender.getBundleName());
         assertEquals(EclipseLogAppender.DEFAULT_BUNDLE_SYMBOLIC_NAME, appender.getBundleName());
@@ -104,12 +107,12 @@ public class EclipseLogAppenderTest {
         // then appender should not start
         assertFalse(appender.isStarted());
     }
-    
+
     @Test
     public void testAppendInfo() {
         MockEclipseErrorLog log = (MockEclipseErrorLog)appender.getPlatform().getLog(null);
         List<IStatus> events = log.getLog();
-        
+
         //TODO: write me...
     }
 }
@@ -121,12 +124,12 @@ public class EclipseLogAppenderTest {
 class EclipseLogAppenderWithMockPlatform extends EclipseLogAppender {
     static private final IPlatform _platform = new IPlatform() {
         private final MockEclipseErrorLog log = new MockEclipseErrorLog();
-        
+
         @Override
         public ILog getLog(Bundle bundle) {
             return log;
         }
-        
+
         @Override
         public Bundle getBundle(String bundleName) {
             if (log.getBundle().getSymbolicName().equals(bundleName)) {
@@ -135,7 +138,7 @@ class EclipseLogAppenderWithMockPlatform extends EclipseLogAppender {
             return null;
         }
     };
-        
+
     @Override
     protected IPlatform getPlatform() {
         return _platform;
@@ -148,11 +151,11 @@ class EclipseLogAppenderWithMockPlatform extends EclipseLogAppender {
 class MockEclipseErrorLog implements ILog {
     static private final MockEclipseBundle BUNDLE = new MockEclipseBundle();
     private List<IStatus> log;
-    
+
     @Override
     public void addLogListener(ILogListener listener) {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -168,9 +171,9 @@ class MockEclipseErrorLog implements ILog {
     @Override
     public void removeLogListener(ILogListener listener) {
         // TODO Auto-generated method stub
-        
+
     }
-    
+
     public List<IStatus> getLog() {
         return log;
     }
@@ -190,43 +193,43 @@ class MockEclipseBundle implements Bundle {
     @Override
     public void start(int options) throws BundleException {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void start() throws BundleException {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void stop(int options) throws BundleException {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void stop() throws BundleException {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void update(InputStream input) throws BundleException {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void update() throws BundleException {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
     public void uninstall() throws BundleException {
         // TODO Auto-generated method stub
-        
+
     }
 
     @Override
@@ -314,7 +317,7 @@ class MockEclipseBundle implements Bundle {
 
     @Override
     public Enumeration<URL> findEntries(String path, String filePattern,
-            boolean recurse) {
+                                        boolean recurse) {
         // TODO Auto-generated method stub
         return null;
     }
