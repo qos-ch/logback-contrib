@@ -12,13 +12,13 @@
  */
 package ch.qos.logback.contrib.mongodb;
 
-import java.util.Date;
-
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.classic.spi.StackTraceElementProxy;
 import com.mongodb.BasicDBList;
 import com.mongodb.BasicDBObject;
+
+import java.util.Date;
 
 /**
  * @author Christian Trutz
@@ -37,6 +37,9 @@ public class MongoDBLoggingEventAppender extends MongoDBAppenderBase<ILoggingEve
         logEntry.append("thread", event.getThreadName());
         logEntry.append("timestamp", new Date(event.getTimeStamp()));
         logEntry.append("level", event.getLevel().toString());
+        if (event.getMarker() != null) {
+            logEntry.append("marker", event.getMarker().getName());
+        }
         if (event.getMDCPropertyMap() != null && !event.getMDCPropertyMap().isEmpty()) {
             logEntry.append("mdc", event.getMDCPropertyMap());
         }
