@@ -1,2 +1,2 @@
-Fragment-Host: org.codehaus.janino
+Fragment-Host: org.codehaus.janino.janino
 Require-Bundle: ch.qos.logback.core
