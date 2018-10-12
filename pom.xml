@@ -280,6 +280,12 @@
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
                 <version>2.3.7</version>
+                <configuration>
+                    <instructions>
+                        <Fragment-Host>ch.qos.logback.classic</Fragment-Host>
+                    </instructions>
+                </configuration>
+                
                 <executions>
                     <execution>
                         <id>bundle-manifest</id>
