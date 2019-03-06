@@ -15,10 +15,8 @@ package ch.qos.logback.contrib.json.classic;
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.joran.JoranConfigurator;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.LoggingEvent;
-import ch.qos.logback.core.joran.spi.JoranException;
 import org.junit.Test;
 import org.slf4j.LoggerFactory;
 
@@ -38,13 +36,6 @@ import static org.junit.matchers.JUnitMatchers.containsString;
 public class JsonLayoutTest {
 
     private LoggerContext context = new LoggerContext();
-
-    private void configure(String file) throws JoranException {
-        context.reset();
-        JoranConfigurator jc = new JoranConfigurator();
-        jc.setContext(context);
-        jc.doConfigure(file);
-    }
 
     @Test
     public void addToJsonMap() throws Exception {
@@ -102,7 +93,7 @@ public class JsonLayoutTest {
 
     @Test
     public void jsonLayout() throws Exception {
-        configure("src/test/input/json/jsonLayout.xml");
+        ContextUtil.reconfigure(context, "src/test/input/json/jsonLayout.xml");
         String loggerName = "ROOT";
         String message = "Info message";
         String debugMessage = "Debug message";
