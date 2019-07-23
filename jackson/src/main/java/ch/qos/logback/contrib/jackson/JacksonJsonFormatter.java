@@ -33,10 +33,12 @@ public class JacksonJsonFormatter implements JsonFormatter {
 
     private ObjectMapper objectMapper;
     private boolean prettyPrint;
+    private boolean eventEol;
 
     public JacksonJsonFormatter() {
         this.objectMapper = new ObjectMapper();
         this.prettyPrint = false;
+        this.eventEol = false;
     }
 
     @Override
@@ -52,7 +54,7 @@ public class JacksonJsonFormatter implements JsonFormatter {
 
         writer.flush();
 
-        return writer.toString();
+        return writer.toString() + (eventEol ? "\n": "");
     }
 
     public ObjectMapper getObjectMapper() {
@@ -69,6 +71,10 @@ public class JacksonJsonFormatter implements JsonFormatter {
 
     public void setPrettyPrint(boolean prettyPrint) {
         this.prettyPrint = prettyPrint;
+    }
+
+    public void setEventEol(boolean eventEol) {
+        this.eventEol = eventEol;
     }
 }
 
