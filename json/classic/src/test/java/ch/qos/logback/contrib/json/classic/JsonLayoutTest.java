@@ -21,6 +21,8 @@ import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.core.joran.spi.JoranException;
 import org.junit.Test;
 import org.slf4j.LoggerFactory;
+import org.slf4j.Marker;
+import org.slf4j.MarkerFactory;
 
 import java.util.*;
 
@@ -136,6 +138,51 @@ public class JsonLayoutTest {
         assertThat(logWithException, containsString(String.format("%s=%s", JsonLayout.FORMATTED_MESSAGE_ATTR_NAME, debugMessage)));
         assertThat(logWithException, containsString(String.format("%s=%s", JsonLayout.MESSAGE_ATTR_NAME, debugMessage)));
         assertThat(logWithException, containsString(String.format("%s=%s", JsonLayout.EXCEPTION_ATTR_NAME, exception.toString())));
+    }
+    
+    @Test
+    public void jsonLayoutWithMarker() throws Exception {
+    	configure("src/test/input/json/jsonLayout.xml");
+        String loggerName = "ROOT";
+        String message = "Info message with Marker";
+        String debugMessage = "Debug message with Marker";
+        Logger logger = (Logger) LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME);
+        Marker marker = MarkerFactory.getMarker("MYMARKER");
+        logger.info(marker, "Test");
+        ILoggingEvent event = new LoggingEvent("my.class.name", logger, Level.INFO, message, null, null);
+        ((LoggingEvent)event).setMarker(marker);
+        
+        JsonLayout jsonLayout = new JsonLayout();
+        jsonLayout.setContext(context);
+        String log = jsonLayout.doLayout(event);
+
+        assertTimestamp(log);
+        assertThat(log, containsString(String.format("%s=%s", JsonLayout.LEVEL_ATTR_NAME, Level.INFO)));
+        assertThat(log, containsString(String.format("%s=%s", JsonLayout.THREAD_ATTR_NAME, "main")));
+        assertThat(log, containsString(String.format("%s=%s", JsonLayout.LOGGER_ATTR_NAME, loggerName)));
+        assertThat(log, containsString(String.format("%s=%s", JsonLayout.FORMATTED_MESSAGE_ATTR_NAME, message)));
+        assertThat(log, containsString(String.format("%s=%s", JsonLayout.MARKER_ATTR_NAME, marker.getName())));
+
+        jsonLayout.setIncludeContextName(true);
+        jsonLayout.setIncludeMDC(true);
+        jsonLayout.setIncludeLoggerName(true);
+        jsonLayout.setIncludeException(true);
+        jsonLayout.setIncludeMessage(true);
+        jsonLayout.setIncludeMarker(true);
+
+        RuntimeException exception = new RuntimeException("Exception");
+        ILoggingEvent eventWithException = new LoggingEvent("my.class.name", logger, Level.DEBUG, debugMessage, exception, null);
+        ((LoggingEvent)eventWithException).setMarker(marker);
+        String logWithException = jsonLayout.doLayout(eventWithException);
+
+        assertTimestamp(logWithException);
+        assertThat(logWithException, containsString(String.format("%s=%s", JsonLayout.LEVEL_ATTR_NAME, Level.DEBUG)));
+        assertThat(logWithException, containsString(String.format("%s=%s", JsonLayout.LOGGER_ATTR_NAME, loggerName)));
+        assertThat(logWithException, containsString(String.format("%s=%s", JsonLayout.FORMATTED_MESSAGE_ATTR_NAME, debugMessage)));
+        assertThat(logWithException, containsString(String.format("%s=%s", JsonLayout.MESSAGE_ATTR_NAME, debugMessage)));
+        assertThat(logWithException, containsString(String.format("%s=%s", JsonLayout.EXCEPTION_ATTR_NAME, exception.toString())));
+        assertThat(logWithException, containsString(String.format("%s=%s", JsonLayout.MARKER_ATTR_NAME, marker.getName())));
+        
     }
 
     private void assertTimestamp(String log) {
