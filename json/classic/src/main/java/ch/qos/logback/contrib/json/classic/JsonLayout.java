@@ -21,6 +21,8 @@ import ch.qos.logback.contrib.json.JsonLayoutBase;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.slf4j.Marker;
+
 /**
  * A JsonLayout builds its {@link #toJsonMap(ch.qos.logback.classic.spi.ILoggingEvent) jsonMap} from a
  * source {@link ch.qos.logback.classic.spi.ILoggingEvent ILoggingEvent} with the following keys/value pairs:
@@ -111,6 +113,7 @@ public class JsonLayout extends JsonLayoutBase<ILoggingEvent> {
     public static final String MESSAGE_ATTR_NAME = "raw-message";
     public static final String EXCEPTION_ATTR_NAME = "exception";
     public static final String CONTEXT_ATTR_NAME = "context";
+    public static final String MARKER_ATTR_NAME = "marker";
 
     protected boolean includeLevel;
     protected boolean includeThreadName;
@@ -120,6 +123,7 @@ public class JsonLayout extends JsonLayoutBase<ILoggingEvent> {
     protected boolean includeMessage;
     protected boolean includeException;
     protected boolean includeContextName;
+    protected boolean includeMarker;
 
     private ThrowableHandlingConverter throwableProxyConverter;
 
@@ -133,6 +137,7 @@ public class JsonLayout extends JsonLayoutBase<ILoggingEvent> {
         this.includeException = true;
         this.includeContextName = true;
         this.throwableProxyConverter = new ThrowableProxyConverter();
+        this.includeMarker = true;
     }
 
     @Override
@@ -147,6 +152,10 @@ public class JsonLayout extends JsonLayoutBase<ILoggingEvent> {
         this.throwableProxyConverter.stop();
     }
 
+    protected String getMarkerNameOrNull (Marker marker) {
+    	return marker != null ? marker.getName() : null;
+    }
+    
     @Override
     protected Map toJsonMap(ILoggingEvent event) {
 
@@ -154,6 +163,7 @@ public class JsonLayout extends JsonLayoutBase<ILoggingEvent> {
 
         addTimestamp(TIMESTAMP_ATTR_NAME, this.includeTimestamp, event.getTimeStamp(), map);
         add(LEVEL_ATTR_NAME, this.includeLevel, String.valueOf(event.getLevel()), map);
+        add(MARKER_ATTR_NAME, this.includeMarker, getMarkerNameOrNull(event.getMarker()), map);
         add(THREAD_ATTR_NAME, this.includeThreadName, event.getThreadName(), map);
         addMap(MDC_ATTR_NAME, this.includeMDC, event.getMDCPropertyMap(), map);
         add(LOGGER_ATTR_NAME, this.includeLoggerName, event.getLoggerName(), map);
@@ -261,4 +271,13 @@ public class JsonLayout extends JsonLayoutBase<ILoggingEvent> {
     public void setThrowableProxyConverter(ThrowableHandlingConverter throwableProxyConverter) {
         this.throwableProxyConverter = throwableProxyConverter;
     }
+
+	public boolean isIncludeMarker() {
+		return includeMarker;
+	}
+
+	public void setIncludeMarker(boolean includeMarker) {
+		this.includeMarker = includeMarker;
+	}
+    
 }
