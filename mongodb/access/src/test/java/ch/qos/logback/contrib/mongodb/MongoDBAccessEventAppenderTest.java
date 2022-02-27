@@ -18,7 +18,7 @@ import java.util.Date;
 
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import org.junit.Before;
 import org.junit.Test;
